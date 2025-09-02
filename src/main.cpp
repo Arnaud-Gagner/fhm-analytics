@@ -5,6 +5,16 @@
 #include <fstream>
 #include <iostream>
 
+/*
+    TODO v0.2:
+        - create yaml parser
+        - read configuration
+            add focus league
+            add focus position
+            add print stats
+        - program args for custom input folder and config file
+*/
+
 int main()
 {
     std::vector<Player> potentialPlayers = {};
