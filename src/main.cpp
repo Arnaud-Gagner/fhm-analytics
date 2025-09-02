@@ -18,9 +18,8 @@
 int main()
 {
     std::vector<Player> potentialPlayers = {};
-    std::ifstream masterFile("D:/csv/player_master.csv");
-    CsvParser PlayerInfoParser(masterFile);
 
+    CsvParser PlayerInfoParser("D:/csv/player_master.csv");
     while (PlayerInfoParser.nextLine()) {
         if (PlayerInfoParser.data().size() != 0 && PlayerInfoParser.data()[1] == "0") {
             Player newPlayer = Player();
@@ -29,9 +28,7 @@ int main()
         }
     }
 
-    std::ifstream ratingsFile("D:/csv/player_ratings.csv");
-    CsvParser PlayerPositionsParser(ratingsFile);
-
+    CsvParser PlayerPositionsParser("D:/csv/player_ratings.csv");
     int j = 0;
     PlayerPositionsParser.nextLine();
     while (PlayerPositionsParser.nextLine()) {
@@ -43,9 +40,7 @@ int main()
         }
     }
 
-    std::ifstream statsFile("D:/csv/player_skater_stats_rs.csv");
-    CsvParser PlayerStatsParser(statsFile);
-
+    CsvParser PlayerStatsParser("D:/csv/player_skater_stats_rs.csv");
     int i = 0;
     PlayerStatsParser.nextLine();
     while (PlayerStatsParser.nextLine()) {

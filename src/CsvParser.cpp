@@ -2,9 +2,14 @@
 
 #include "CsvRow.h"
 
-CsvParser::CsvParser(std::istream& file)
-  : mFile(file)
+CsvParser::CsvParser(const char* filepath)
+    : mFile(filepath)
 {
+}
+
+CsvParser::~CsvParser()
+{
+    mFile.close();
 }
 
 std::vector<std::string> CsvParser::data() const

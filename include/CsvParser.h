@@ -1,7 +1,7 @@
 #ifndef CSV_PARSER_H
 #define CSV_PARSER_H
 
-#include <istream>
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -9,7 +9,7 @@
 
 class CsvParser {
 public:
-    CsvParser(std::istream& file);
+    CsvParser(const char* filepath);
     ~CsvParser() = default;
 
     std::vector<std::string> data() const;
@@ -19,7 +19,7 @@ public:
     bool nextLine();
 
 private:
-    std::istream& mFile;
+    std::ifstream mFile;
     CsvRow mRow;
 };
 
