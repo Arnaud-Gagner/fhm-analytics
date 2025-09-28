@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 
-class CsvRow {
+class CsvRow
+{
 public:
     CsvRow();
     ~CsvRow() = default;

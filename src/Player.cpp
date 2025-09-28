@@ -29,7 +29,13 @@ void Player::setInfo(const std::vector<std::string>& info)
     mInfo.franchiseId = std::stoi(info[2]);
     mInfo.firstName = info[3];
     mInfo.lastName = info[4];
-    // TODO: the rest
+    mInfo.nickName = info[5];
+    mInfo.height = std::stoi(info[6]);
+    mInfo.weight = std::stoi(info[7]);
+    mInfo.dateBirth = info[8];
+    mInfo.birthCity = info[9];
+    mInfo.birthState = info[10];
+    mInfo.nationality = info[11];
 }
 
 void Player::setPositions(const std::vector<std::string>& positions)
@@ -49,14 +55,6 @@ void Player::setStats(const std::vector<std::string>& stats)
 
 void Player::print() const
 {
-    std::cout << mInfo.firstName << ' ' << mInfo.lastName << '[' << mInfo.playerId
-              << "] "
-                 " played "
-              << mStats.gamesPlayed << " games" << '\n'
-              << '\t' << "goalie: " << mPositions.isGoalie << '\n'
-              << '\t' << "left d: " << mPositions.isLeftDefenseman << '\n'
-              << '\t' << "right d: " << mPositions.isRightDefenseman << '\n'
-              << '\t' << "center: " << mPositions.isCenter << '\n'
-              << '\t' << "left winger: " << mPositions.isLeftWinger << '\n'
-              << '\t' << "right winger: " << mPositions.isRightWinger << '\n';
+    std::cout << mInfo.firstName << ' ' << mInfo.lastName << " [" << mInfo.playerId
+              << "] played " << mStats.gamesPlayed << " games" << '\n';
 }

@@ -11,7 +11,7 @@ struct PlayerMaster {
     std::string firstName = "Average";
     std::string lastName = "Joe";
     std::string nickName = "";
-    int heigt = 0;
+    int height = 0;
     int weight = 0;
     std::string dateBirth = "1900-01-01";
     std::string birthCity = "Tokyo";
@@ -48,22 +48,22 @@ struct PlayerStats {
     int offensiveGameRating = 0;
     int defensiveGameRating = 0;
     int shots = 0;
-    int timeOnIce = 0;
-    int ppTimeOnIce = 0;
-    int shTimeOnIce = 0;
-    int pdo = 0;
-    int gf60 = 0;
-    int ga60 = 0;
-    int sf60 = 0;
-    int sa60 = 0;
+    double timeOnIce = 0;
+    double ppTimeOnIce = 0;
+    double shTimeOnIce = 0;
+    double pdo = 0;
+    double gf60 = 0;
+    double ga60 = 0;
+    double sf60 = 0;
+    double sa60 = 0;
     int corsiFor = 0;
     int corsiAgainst = 0;
-    int corsiPercentage = 0;
+    double corsiPercentage = 0;
     int corsiRelative = 0;
     int fenwickFor = 0;
     int fenwickAgainst = 0;
     int fenwickPercentage = 0;
-    int fenwickRelative = 0;
+    double fenwickRelative = 0;
     int gameWinningGoals = 0;
     int faceoffTaken = 0;
     int faceoffWon = 0;
@@ -73,7 +73,8 @@ struct CustomStats {
     int takeawayRelative = 0;
 };
 
-class Player {
+class Player
+{
 public:
     Player();
     ~Player() = default;
