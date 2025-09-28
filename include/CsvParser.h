@@ -7,15 +7,17 @@
 
 #include "CsvRow.h"
 
-class CsvParser {
+class CsvParser
+{
 public:
     CsvParser(const char* filepath);
-    ~CsvParser() = default;
+    ~CsvParser();
 
     std::vector<std::string> data() const;
 
     void setInterestColumns(const std::vector<int>& columns);
 
+    void close();
     bool nextLine();
 
 private:
