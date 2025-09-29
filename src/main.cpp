@@ -88,29 +88,21 @@ int main()
             filteredPlayer.push_back(std::move(player));
         }
     }
-    std::cout << std::left
-            << std::setw(20) << "Name"
-            << std::setw(9) << "GP"
-            << std::setw(9) << "Goals"
-            << std::setw(9) << "Points"
-            << std::setw(9) << "ATOI"
-            << std::setw(9) << "Goals/60"
-            << std::setw(9) << "A/60"
-            << std::setw(9) << "Pts/60"
-            << std::setw(9) << "Shots/60"
-            << std::setw(9) << "Shot%"
-            << std::setw(9) << "Hits/60"
-            << std::setw(9) << "TK/60"
-            << std::setw(9) << "SBlk/60"
-            << std::endl;
+    std::cout << std::left << std::setw(20) << "Name" << std::right << std::setw(9)
+              << "GP" << std::setw(9) << "Goals" << std::setw(9) << "Points"
+              << std::setw(9) << "+/-" << std::setw(9) << "ATOI" << std::setw(9)
+              << "Goals/60" << std::setw(9) << "A/60" << std::setw(9) << "Pts/60"
+              << std::setw(9) << "Shots/60" << std::setw(9) << "Shot%" << std::setw(9)
+              << "Hits/60" << std::setw(9) << "TK/60" << std::setw(9) << "TK rel"
+              << std::setw(9) << "SBlk/60" << '\n';
 
     for (Player& player : freeAgents) {
-        if ((player.positions.isCenter || player.positions.isRightWinger
-            || player.positions.isLeftWinger) && player.stats.gamesPlayed > 20) {
+        if ((player.positions.isLeftDefenseman || player.positions.isRightDefenseman)
+            && player.stats.gamesPlayed >= 20) {
             PlayerUtils::customStats(player);
-            if (player.customs.takeawayRel > 0 && player.customs.takeaway60 > 1.0) {
-                PlayerUtils::print(player);
-            }
+            // if (player.customs.shots60 > 20.0) {
+            PlayerUtils::print(player);
+            //}
         }
     }
     return 0;

@@ -172,14 +172,15 @@ void PlayerUtils::print(const Player& player)
 {
     std::string fullName = player.info.firstName + " " + player.info.lastName;
 
-    std::cout << std::left << std::setw(20) << fullName << std::setw(12)
+    std::cout << std::left << std::setw(20) << fullName << std::right << std::setw(9)
               << player.stats.gamesPlayed << std::setw(9) << player.stats.goals
               << std::setw(9) << player.customs.points << std::setw(9)
-              << player.customs.atoi << std::setw(9) << std::fixed
-              << std::setprecision(2) << player.customs.goal60 << std::setw(9)
-              << player.customs.assist60 << std::setw(9) << player.customs.pt60
-              << std::setw(9) << player.customs.shots60 << std::setw(9)
-              << player.customs.shotPercentage << std::setw(9) << player.customs.hit60
-              << std::setw(9) << player.customs.takeaway60 << std::setw(9)
-              << player.customs.shotblock60 << std::endl;
+              << player.stats.plusminus << std::setw(9) << std::fixed
+              << std::setprecision(2) << player.customs.atoi << std::setw(9)
+              << player.customs.goal60 << std::setw(9) << player.customs.assist60
+              << std::setw(9) << player.customs.pt60 << std::setw(9)
+              << player.customs.shots60 << std::setw(9) << player.customs.shotPercentage
+              << std::setw(9) << player.customs.hit60 << std::setw(9)
+              << player.customs.takeaway60 << std::setw(9) << player.customs.takeawayRel
+              << std::setw(9) << player.customs.shotblock60 << '\n';
 }
