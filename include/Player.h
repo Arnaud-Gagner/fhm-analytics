@@ -80,12 +80,13 @@ struct Player {
     CustomStats customs;
 };
 
-namespace PlayerUtils {
-    void setInfo(Player& player, const std::vector<std::string>& info);
-    void setPositions(Player& player, const std::vector<std::string>& positions);
-    void setStats(Player& player, const std::vector<std::string>& stats);
+namespace PlayerUtils
+{
+void setInfo(Player& player, const std::vector<std::string>& info);
+void setPositions(Player& player, const std::vector<std::string>& positions);
+void setStats(Player& player, const std::vector<std::string>& stats);
 
-    void print(const Player& player);
+void print(const Player& player);
 }
 
 bool hasId(std::string id, const std::vector<Player>& players);

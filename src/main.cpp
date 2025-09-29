@@ -17,44 +17,39 @@
 
 int main()
 {
+    clock_t start = std::clock();
     std::vector<Player> potentialPlayers = {};
-
     CsvParser PlayerInfoParser("D:/csv/player_master.csv");
-    while (PlayerInfoParser.nextLine()) {
-        if (PlayerInfoParser.data().size() != 0 && PlayerInfoParser.data()[1] == "0") {
-            Player newPlayer = Player();
-            PlayerUtils::setInfo(newPlayer, PlayerInfoParser.data());
-            potentialPlayers.push_back(newPlayer);
+
+    PlayerInfoParser.nextLine();
+    while (PlayerInfoParser.nextLine() && PlayerInfoParser.data().size() != 0) {
+        const std::vector<std::string>& lineData = PlayerInfoParser.data();
+        try {
+            int teamID = std::stoi(lineData[1]);
+            if (teamID < 36 && teamID >= 0) {
+                Player newPlayer = Player();
+                PlayerUtils::setInfo(newPlayer, lineData);
+                potentialPlayers.push_back(std::move(newPlayer));
+            }
+        }
+        catch (...) {
         }
     }
 
     CsvParser PlayerPositionsParser("D:/csv/player_ratings.csv");
-    int j = 0;
     PlayerPositionsParser.nextLine();
-    while (PlayerPositionsParser.nextLine()) {
-        if (PlayerPositionsParser.data().size() != 0
-            && j < PlayerPositionsParser.data().size() - 1
-            && hasId(PlayerPositionsParser.data()[0], potentialPlayers)) {
+    int j = 0;
+    while (PlayerPositionsParser.nextLine() && PlayerPositionsParser.data().size() != 0) {
+        if (hasId(PlayerPositionsParser.data()[0], potentialPlayers)) {
             PlayerUtils::setPositions(potentialPlayers[j], PlayerPositionsParser.data());
             j++;
         }
     }
 
     CsvParser PlayerStatsParser("D:/csv/player_skater_stats_rs.csv");
-    int i = 0;
-    PlayerStatsParser.nextLine();
-    while (PlayerStatsParser.nextLine()) {
-        if (PlayerStatsParser.data().size() != 0
-            && i < PlayerStatsParser.data().size() - 1
-            && hasId(PlayerStatsParser.data()[0], potentialPlayers)) {
 
-            while (potentialPlayers[i].info.playerId != std::stoi(PlayerStatsParser.data()[0])) {
-                i++;
-            }
-            PlayerUtils::setStats(potentialPlayers[i], PlayerStatsParser.data());
-            PlayerUtils::print(potentialPlayers[i]);
-            i++;
-        }
-    }
+    PlayerStatsParser.nextLine();
+    while (PlayerStatsParser.nextLine()) {}
+    std::cout << std::clock() - start;
     return 0;
 }
