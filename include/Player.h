@@ -70,10 +70,11 @@ namespace PlayerUtils
 void setInfo(Player& player, const std::vector<std::string>& info);
 void setPositions(Player& player, const std::vector<std::string>& positions);
 void setStats(Player& player, const std::vector<std::string>& stats);
+void appendStats(Player& player, const std::vector<std::string>& stats);
 
+int playerIndex(const std::string& id, const std::vector<Player>& players);
 void print(const Player& player);
 }
 
-bool hasId(std::string id, const std::vector<Player>& players);
 
 #endif // !PLAYER_H

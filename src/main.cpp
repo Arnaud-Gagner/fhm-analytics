@@ -19,51 +19,52 @@ int main()
 {
     clock_t start = std::clock();
     std::vector<Player> potentialPlayers = {};
-    CsvParser PlayerInfoParser("D:/csv/player_master.csv");
 
+    CsvParser PlayerStatsParser("D:/csv/player_skater_career_stats_rs.csv");
+    PlayerStatsParser.nextLine();
+
+    int lastPlayer = -1;
+    while (PlayerStatsParser.nextLine() && PlayerStatsParser.data().size() != 0) {
+        const std::vector<std::string>& lineData = PlayerStatsParser.data();
+        int currentPlayer = std::stoi(lineData[0]);
+
+        if (lineData[1] == "2021" && lineData[3] == "0") {
+            if (currentPlayer == lastPlayer) {
+                PlayerUtils::appendStats(potentialPlayers.back(), lineData);
+            }
+            else {
+                potentialPlayers.push_back(Player());
+                PlayerUtils::setStats(potentialPlayers.back(), lineData);
+            }
+            lastPlayer = currentPlayer;
+        }
+    }
+
+    CsvParser PlayerInfoParser("D:/csv/player_master.csv");
     PlayerInfoParser.nextLine();
+
     while (PlayerInfoParser.nextLine() && PlayerInfoParser.data().size() != 0) {
-        const std::vector<std::string>& lineData = PlayerInfoParser.data();
         try {
-            int teamID = std::stoi(lineData[1]);
-            if (teamID < 36 && teamID >= 0) {
-                Player newPlayer = Player();
-                PlayerUtils::setInfo(newPlayer, lineData);
-                potentialPlayers.push_back(std::move(newPlayer));
+            int index = PlayerUtils::playerIndex(PlayerInfoParser.data()[0], potentialPlayers);
+            if (index != -1) {
+                PlayerUtils::setInfo(potentialPlayers[static_cast<size_t>(index)], PlayerInfoParser.data());
             }
         }
         catch (...) {
         }
     }
-
+    
     CsvParser PlayerPositionsParser("D:/csv/player_ratings.csv");
     PlayerPositionsParser.nextLine();
-    int i = 0;
+
     while (PlayerPositionsParser.nextLine() && PlayerPositionsParser.data().size() != 0) {
-        if (hasId(PlayerPositionsParser.data()[0], potentialPlayers)) {
-            PlayerUtils::setPositions(potentialPlayers[i], PlayerPositionsParser.data());
-            i++;
+        try {
+            int index = PlayerUtils::playerIndex(PlayerPositionsParser.data()[0], potentialPlayers);
+            if (index != -1) {
+                PlayerUtils::setPositions(potentialPlayers[static_cast<size_t>(index)], PlayerPositionsParser.data());
+            }
         }
-    }
-
-    CsvParser PlayerStatsParser("D:/csv/player_skater_career_stats_rs.csv");
-    int j = 0;
-    int lastPlayer = -1;
-    PlayerStatsParser.nextLine();
-    while (PlayerStatsParser.nextLine() && PlayerStatsParser.data().size() != 0) {
-        const std::vector<std::string>& lineData = PlayerStatsParser.data();
-        int currentPlayer = std::stoi(lineData[0]);
-        if (hasId(lineData[0], potentialPlayers) && lineData[1] == "2021"
-            && lineData[3] == "0") {
-
-            while (currentPlayer > potentialPlayers[j].info.playerId) {
-                j++;
-            }
-            if (currentPlayer != lastPlayer) {
-                PlayerUtils::setStats(potentialPlayers[j], PlayerStatsParser.data());
-                j++;
-            }
-            lastPlayer = currentPlayer;
+        catch (...) {
         }
     }
 
@@ -73,6 +74,7 @@ int main()
             filteredPlayer.push_back(std::move(player));
         }
     }
+    
     for (const Player& player : filteredPlayer) {
         if ((float)(player.stats.goals) / (float)(player.stats.timeOnIce)
               * player.stats.gamesPlayed * 60
