@@ -6,20 +6,17 @@ Tool that crunches data from *Franchise Hockey Manager* to filter the best playe
 
 ## Current Status
 
-The project reads hard-coded path (D:/) of csv folder and prints Canadiens' skaters with their match played.
+The project reads hard-coded path (D:/) of csv folder and prints free agents (defensemen) with some of their stats
 
-## TODO v0.2
+## TODO
 
     1. Configuration by yaml file
-    2. Filter by league and positions
-    2. Filter by data
+    2. Filter by league, positions and contract situation
+    3. Filter by data
     4. Program reads arg for custom paths
 
-## long-term TODO
+> less urgent
 
-> Elements are classified in no particular order
-    
-    - Add more data like PPG/60, HIT/60, TK rel, EVG/60
     - Track multiple years
     - Handle goalies
     - Benchmarks
