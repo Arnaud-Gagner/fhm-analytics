@@ -62,6 +62,8 @@ struct CustomStats {
     int ppPoints = 0;
     int shPoints = 0;
     int takeawayRel = 0;
+    double shotPercentage = 0.0;
+    double atoi = 0.0; 
     // normalized data
     double goal60 = 0.0;
     double assist60 = 0.0;

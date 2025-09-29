@@ -93,10 +93,12 @@ int main()
             << std::setw(9) << "GP"
             << std::setw(9) << "Goals"
             << std::setw(9) << "Points"
-            << std::setw(9) << "TOI"
+            << std::setw(9) << "ATOI"
             << std::setw(9) << "Goals/60"
+            << std::setw(9) << "A/60"
             << std::setw(9) << "Pts/60"
             << std::setw(9) << "Shots/60"
+            << std::setw(9) << "Shot%"
             << std::setw(9) << "Hits/60"
             << std::setw(9) << "TK/60"
             << std::setw(9) << "SBlk/60"
@@ -106,7 +108,9 @@ int main()
         if ((player.positions.isCenter || player.positions.isRightWinger
             || player.positions.isLeftWinger) && player.stats.gamesPlayed > 20) {
             PlayerUtils::customStats(player);
-            PlayerUtils::print(player);
+            if (player.customs.takeawayRel > 0 && player.customs.takeaway60 > 1.0) {
+                PlayerUtils::print(player);
+            }
         }
     }
     return 0;

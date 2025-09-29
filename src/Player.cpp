@@ -94,6 +94,10 @@ void PlayerUtils::customStats(Player& player)
     player.customs.ppPoints = player.stats.ppAssists + player.stats.ppGoals;
     player.customs.shPoints = player.stats.shAssists + player.stats.shGoals;
     player.customs.takeawayRel = player.stats.takeaway - player.stats.giveaway;
+    player.customs.shotPercentage = static_cast<double>(player.stats.goals)
+                                    / static_cast<double>(player.stats.shots) * 100.0;
+    player.customs.atoi = static_cast<double>(player.stats.timeOnIce)
+                          / static_cast<double>(player.stats.gamesPlayed) / 60.0;
 
     if (player.stats.timeOnIce > 0) {
         player.customs.goal60 = static_cast<double>(player.stats.goals)
@@ -168,17 +172,14 @@ void PlayerUtils::print(const Player& player)
 {
     std::string fullName = player.info.firstName + " " + player.info.lastName;
 
-    std::cout << std::left
-              << std::setw(20) << fullName
-              << std::setw(12) << player.stats.gamesPlayed
-              << std::setw(9) << player.stats.goals
-              << std::setw(9) << player.customs.points
-              << std::setw(9) << player.stats.timeOnIce
-              << std::setw(9) << std::fixed << std::setprecision(2) << player.customs.goal60
-              << std::setw(9) << player.customs.pt60
-              << std::setw(9) << player.customs.shots60
-              << std::setw(9) << player.customs.hit60
-              << std::setw(9) << player.customs.takeaway60
-              << std::setw(9) << player.customs.shotblock60
-              << std::endl;
+    std::cout << std::left << std::setw(20) << fullName << std::setw(12)
+              << player.stats.gamesPlayed << std::setw(9) << player.stats.goals
+              << std::setw(9) << player.customs.points << std::setw(9)
+              << player.customs.atoi << std::setw(9) << std::fixed
+              << std::setprecision(2) << player.customs.goal60 << std::setw(9)
+              << player.customs.assist60 << std::setw(9) << player.customs.pt60
+              << std::setw(9) << player.customs.shots60 << std::setw(9)
+              << player.customs.shotPercentage << std::setw(9) << player.customs.hit60
+              << std::setw(9) << player.customs.takeaway60 << std::setw(9)
+              << player.customs.shotblock60 << std::endl;
 }
