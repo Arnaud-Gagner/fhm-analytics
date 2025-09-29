@@ -23,7 +23,7 @@ int main()
     while (PlayerInfoParser.nextLine()) {
         if (PlayerInfoParser.data().size() != 0 && PlayerInfoParser.data()[1] == "0") {
             Player newPlayer = Player();
-            newPlayer.setInfo(PlayerInfoParser.data());
+            PlayerUtils::setInfo(newPlayer, PlayerInfoParser.data());
             potentialPlayers.push_back(newPlayer);
         }
     }
@@ -35,7 +35,7 @@ int main()
         if (PlayerPositionsParser.data().size() != 0
             && j < PlayerPositionsParser.data().size() - 1
             && hasId(PlayerPositionsParser.data()[0], potentialPlayers)) {
-            potentialPlayers[j].setPositions(PlayerPositionsParser.data());
+            PlayerUtils::setPositions(potentialPlayers[j], PlayerPositionsParser.data());
             j++;
         }
     }
@@ -48,11 +48,11 @@ int main()
             && i < PlayerStatsParser.data().size() - 1
             && hasId(PlayerStatsParser.data()[0], potentialPlayers)) {
 
-            while (potentialPlayers[i].id() != std::stoi(PlayerStatsParser.data()[0])) {
+            while (potentialPlayers[i].info.playerId != std::stoi(PlayerStatsParser.data()[0])) {
                 i++;
             }
-            potentialPlayers[i].setStats(PlayerStatsParser.data());
-            potentialPlayers[i].print();
+            PlayerUtils::setStats(potentialPlayers[i], PlayerStatsParser.data());
+            PlayerUtils::print(potentialPlayers[i]);
             i++;
         }
     }

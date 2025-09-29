@@ -73,29 +73,20 @@ struct CustomStats {
     int takeawayRelative = 0;
 };
 
-class Player
-{
-public:
-    Player();
-    ~Player() = default;
-
-    int id() const;
-
-    void setInfo(const std::vector<std::string>& info);
-    void setPositions(const std::vector<std::string>& position);
-    void setStats(const std::vector<std::string>& stats);
-
-    void calculateCustomStats();
-
-    bool doesPassFilters() const;
-    void print() const;
-
-private:
-    PlayerMaster mInfo;
-    PlayerPositions mPositions;
-    PlayerStats mStats;
-    CustomStats mCustomStats;
+struct Player {
+    PlayerMaster info;
+    PlayerPositions positions;
+    PlayerStats stats;
+    CustomStats customs;
 };
+
+namespace PlayerUtils {
+    void setInfo(Player& player, const std::vector<std::string>& info);
+    void setPositions(Player& player, const std::vector<std::string>& positions);
+    void setStats(Player& player, const std::vector<std::string>& stats);
+
+    void print(const Player& player);
+}
 
 bool hasId(std::string id, const std::vector<Player>& players);
 
