@@ -3,6 +3,7 @@
 #include "Player.h"
 
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 
 /*
@@ -17,7 +18,6 @@
 
 int main()
 {
-    clock_t start = std::clock();
     std::vector<Player> potentialPlayers = {};
     std::vector<Player> freeAgents = {};
 
@@ -41,8 +41,24 @@ int main()
                 lastPlayer = currentPlayer;
             }
         }
-        catch (...) {}
+        catch (...) {
+        }
+    }
 
+    CsvParser PlayerPositionsParser("D:/csv/player_ratings.csv");
+    PlayerPositionsParser.nextLine();
+
+    while (PlayerPositionsParser.nextLine() && PlayerPositionsParser.data().size() != 0) {
+        try {
+            int index = PlayerUtils::playerIndex(PlayerPositionsParser.data()[0],
+                                                 potentialPlayers);
+            if (index != -1) {
+                PlayerUtils::setPositions(potentialPlayers[static_cast<size_t>(index)],
+                                          PlayerPositionsParser.data());
+            }
+        }
+        catch (...) {
+        }
     }
 
     CsvParser PlayerInfoParser("D:/csv/player_master.csv");
@@ -50,27 +66,16 @@ int main()
 
     while (PlayerInfoParser.nextLine() && PlayerInfoParser.data().size() != 0) {
         try {
-            int index = PlayerUtils::playerIndex(PlayerInfoParser.data()[0], potentialPlayers);
+            int index
+              = PlayerUtils::playerIndex(PlayerInfoParser.data()[0], potentialPlayers);
             if (index != -1 && PlayerInfoParser.data()[1] == "-1") {
-                freeAgents.push_back(std::move(potentialPlayers[static_cast<size_t>(index)]));
+                freeAgents.push_back(
+                  std::move(potentialPlayers[static_cast<size_t>(index)]));
                 PlayerUtils::setInfo(freeAgents.back(), PlayerInfoParser.data());
             }
             else if (index != -1) {
-                PlayerUtils::setInfo(potentialPlayers[static_cast<size_t>(index)], PlayerInfoParser.data());
-            }
-        }
-        catch (...) {
-        }
-    }
-    
-    CsvParser PlayerPositionsParser("D:/csv/player_ratings.csv");
-    PlayerPositionsParser.nextLine();
-
-    while (PlayerPositionsParser.nextLine() && PlayerPositionsParser.data().size() != 0) {
-        try {
-            int index = PlayerUtils::playerIndex(PlayerPositionsParser.data()[0], potentialPlayers);
-            if (index != -1) {
-                PlayerUtils::setPositions(potentialPlayers[static_cast<size_t>(index)], PlayerPositionsParser.data());
+                PlayerUtils::setInfo(potentialPlayers[static_cast<size_t>(index)],
+                                     PlayerInfoParser.data());
             }
         }
         catch (...) {
@@ -83,13 +88,26 @@ int main()
             filteredPlayer.push_back(std::move(player));
         }
     }
+    std::cout << std::left
+            << std::setw(20) << "Name"
+            << std::setw(9) << "GP"
+            << std::setw(9) << "Goals"
+            << std::setw(9) << "Points"
+            << std::setw(9) << "TOI"
+            << std::setw(9) << "Goals/60"
+            << std::setw(9) << "Pts/60"
+            << std::setw(9) << "Shots/60"
+            << std::setw(9) << "Hits/60"
+            << std::setw(9) << "TK/60"
+            << std::setw(9) << "SBlk/60"
+            << std::endl;
 
-    for (const Player& player : freeAgents) {
-        //if ((float)(player.stats.goals) / (float)(player.stats.timeOnIce)              * player.stats.gamesPlayed * 60            > 1.4) {
+    for (Player& player : freeAgents) {
+        if ((player.positions.isCenter || player.positions.isRightWinger
+            || player.positions.isLeftWinger) && player.stats.gamesPlayed > 20) {
+            PlayerUtils::customStats(player);
             PlayerUtils::print(player);
-        //}
+        }
     }
-
-    std::cout << std::clock() - start;
     return 0;
 }

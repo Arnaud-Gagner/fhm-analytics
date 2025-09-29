@@ -1,5 +1,6 @@
 #include "Player.h"
 
+#include <iomanip>
 #include <iostream>
 
 void PlayerUtils::setInfo(Player& player, const std::vector<std::string>& info)
@@ -82,6 +83,75 @@ void PlayerUtils::appendStats(Player& player, const std::vector<std::string>& st
     player.stats.fights += std::stoi(stats[25]);
 }
 
+void PlayerUtils::customStats(Player& player)
+{
+    player.customs.evGoal
+      = player.stats.goals - player.stats.ppGoals - player.stats.shGoals;
+    player.customs.evAssist
+      = player.stats.assists - player.stats.ppAssists - player.stats.shAssists;
+    player.customs.points = player.stats.goals + player.stats.assists;
+    player.customs.evPoints = player.customs.evGoal + player.customs.evAssist;
+    player.customs.ppPoints = player.stats.ppAssists + player.stats.ppGoals;
+    player.customs.shPoints = player.stats.shAssists + player.stats.shGoals;
+    player.customs.takeawayRel = player.stats.takeaway - player.stats.giveaway;
+
+    if (player.stats.timeOnIce > 0) {
+        player.customs.goal60 = static_cast<double>(player.stats.goals)
+                                / static_cast<double>(player.stats.timeOnIce)
+                                * static_cast<double>(player.stats.gamesPlayed) * 60.0;
+        player.customs.assist60 = static_cast<double>(player.stats.assists)
+                                  / static_cast<double>(player.stats.timeOnIce)
+                                  * static_cast<double>(player.stats.gamesPlayed) * 60.0;
+        player.customs.pt60 = static_cast<double>(player.customs.points)
+                              / static_cast<double>(player.stats.timeOnIce)
+                              * static_cast<double>(player.stats.gamesPlayed) * 60.0;
+        player.customs.evGoal60 = static_cast<double>(player.customs.evGoal)
+                                  / static_cast<double>(player.stats.timeOnIce)
+                                  * static_cast<double>(player.stats.gamesPlayed) * 60.0;
+        player.customs.evAssist60 = static_cast<double>(player.customs.evAssist)
+                                    / static_cast<double>(player.stats.timeOnIce)
+                                    * static_cast<double>(player.stats.gamesPlayed)
+                                    * 60.0;
+        player.customs.evPt60 = static_cast<double>(player.customs.evPoints)
+                                / static_cast<double>(player.stats.timeOnIce)
+                                * static_cast<double>(player.stats.gamesPlayed) * 60.0;
+        player.customs.ppGoal60 = static_cast<double>(player.stats.ppGoals)
+                                  / static_cast<double>(player.stats.timeOnIce)
+                                  * static_cast<double>(player.stats.gamesPlayed) * 60.0;
+        player.customs.ppAssist60 = static_cast<double>(player.stats.ppAssists)
+                                    / static_cast<double>(player.stats.timeOnIce)
+                                    * static_cast<double>(player.stats.gamesPlayed)
+                                    * 60.0;
+        player.customs.ppPt60 = static_cast<double>(player.customs.ppPoints)
+                                / static_cast<double>(player.stats.timeOnIce)
+                                * static_cast<double>(player.stats.gamesPlayed) * 60.0;
+        player.customs.shGoal60 = static_cast<double>(player.stats.shGoals)
+                                  / static_cast<double>(player.stats.timeOnIce)
+                                  * static_cast<double>(player.stats.gamesPlayed) * 60.0;
+        player.customs.shAssist60 = static_cast<double>(player.stats.shAssists)
+                                    / static_cast<double>(player.stats.timeOnIce)
+                                    * static_cast<double>(player.stats.gamesPlayed)
+                                    * 60.0;
+        player.customs.shPt60 = static_cast<double>(player.customs.shPoints)
+                                / static_cast<double>(player.stats.timeOnIce)
+                                * static_cast<double>(player.stats.gamesPlayed) * 60.0;
+        player.customs.shots60 = static_cast<double>(player.stats.shots)
+                                 / static_cast<double>(player.stats.timeOnIce)
+                                 * static_cast<double>(player.stats.gamesPlayed) * 60.0;
+        player.customs.hit60 = static_cast<double>(player.stats.hit)
+                               / static_cast<double>(player.stats.timeOnIce)
+                               * static_cast<double>(player.stats.gamesPlayed) * 60.0;
+        player.customs.takeaway60 = static_cast<double>(player.stats.takeaway)
+                                    / static_cast<double>(player.stats.timeOnIce)
+                                    * static_cast<double>(player.stats.gamesPlayed)
+                                    * 60.0;
+        player.customs.shotblock60 = static_cast<double>(player.stats.shotblock)
+                                     / static_cast<double>(player.stats.timeOnIce)
+                                     * static_cast<double>(player.stats.gamesPlayed)
+                                     * 60.0;
+    }
+}
+
 int PlayerUtils::playerIndex(const std::string& id, const std::vector<Player>& players)
 {
     int idFormatted = std::stoi(id);
@@ -96,7 +166,19 @@ int PlayerUtils::playerIndex(const std::string& id, const std::vector<Player>& p
 
 void PlayerUtils::print(const Player& player)
 {
-    std::cout << player.info.firstName << ' ' << player.info.lastName
-              << " | ID: " << player.info.playerId << "\n\t" << player.stats.gamesPlayed
-              << '-' << player.stats.goals << '-' << player.stats.assists << '\n';
+    std::string fullName = player.info.firstName + " " + player.info.lastName;
+
+    std::cout << std::left
+              << std::setw(20) << fullName
+              << std::setw(12) << player.stats.gamesPlayed
+              << std::setw(9) << player.stats.goals
+              << std::setw(9) << player.customs.points
+              << std::setw(9) << player.stats.timeOnIce
+              << std::setw(9) << std::fixed << std::setprecision(2) << player.customs.goal60
+              << std::setw(9) << player.customs.pt60
+              << std::setw(9) << player.customs.shots60
+              << std::setw(9) << player.customs.hit60
+              << std::setw(9) << player.customs.takeaway60
+              << std::setw(9) << player.customs.shotblock60
+              << std::endl;
 }
