@@ -38,18 +38,49 @@ int main()
 
     CsvParser PlayerPositionsParser("D:/csv/player_ratings.csv");
     PlayerPositionsParser.nextLine();
-    int j = 0;
+    int i = 0;
     while (PlayerPositionsParser.nextLine() && PlayerPositionsParser.data().size() != 0) {
         if (hasId(PlayerPositionsParser.data()[0], potentialPlayers)) {
-            PlayerUtils::setPositions(potentialPlayers[j], PlayerPositionsParser.data());
-            j++;
+            PlayerUtils::setPositions(potentialPlayers[i], PlayerPositionsParser.data());
+            i++;
         }
     }
 
-    CsvParser PlayerStatsParser("D:/csv/player_skater_stats_rs.csv");
-
+    CsvParser PlayerStatsParser("D:/csv/player_skater_career_stats_rs.csv");
+    int j = 0;
+    int lastPlayer = -1;
     PlayerStatsParser.nextLine();
-    while (PlayerStatsParser.nextLine()) {}
+    while (PlayerStatsParser.nextLine() && PlayerStatsParser.data().size() != 0) {
+        const std::vector<std::string>& lineData = PlayerStatsParser.data();
+        int currentPlayer = std::stoi(lineData[0]);
+        if (hasId(lineData[0], potentialPlayers) && lineData[1] == "2021"
+            && lineData[3] == "0") {
+
+            while (currentPlayer > potentialPlayers[j].info.playerId) {
+                j++;
+            }
+            if (currentPlayer != lastPlayer) {
+                PlayerUtils::setStats(potentialPlayers[j], PlayerStatsParser.data());
+                j++;
+            }
+            lastPlayer = currentPlayer;
+        }
+    }
+
+    std::vector<Player> filteredPlayer = {};
+    for (const Player& player : potentialPlayers) {
+        if (player.stats.gamesPlayed > 0) {
+            filteredPlayer.push_back(std::move(player));
+        }
+    }
+    for (const Player& player : filteredPlayer) {
+        if ((float)(player.stats.goals) / (float)(player.stats.timeOnIce)
+              * player.stats.gamesPlayed * 60
+            > 1.4) {
+            PlayerUtils::print(player);
+        }
+    }
+
     std::cout << std::clock() - start;
     return 0;
 }
