@@ -6,15 +6,16 @@
 #include <iomanip>
 #include <iostream>
 
-/*
-    TODO v0.2:
-        - create yaml parser
-        - read configuration
-            add focus league
-            add focus position
-            add print stats
-        - program args for custom input folder and config file
-*/
+void printDefHeader()
+{
+    std::cout << std::left << std::setw(20) << "Name" << std::right << std::setw(9)
+              << "GP" << std::setw(9) << "Goals" << std::setw(9) << "A" << std::setw(9)
+              << "Points" << std::setw(9) << "+/-" << std::setw(9) << "evATOI"
+              << std::setw(9) << "ATOI" << std::setw(9) << "Goals/60" << std::setw(9)
+              << "evA/60" << std::setw(9) << "A/60" << std::setw(9) << "Shots/60"
+              << std::setw(9) << "Shot%" << std::setw(9) << "Hits/60" << std::setw(9)
+              << "TK/60" << std::setw(9) << "TK rel" << std::setw(9) << "SBlk/60" << '\n';
+}
 
 int main()
 {
@@ -29,8 +30,8 @@ int main()
         try {
             const std::vector<std::string>& lineData = PlayerStatsParser.data();
             int currentPlayer = std::stoi(lineData[0]);
-
-            if (lineData[1] == "2021" && lineData[3] == "0") {
+            if (lineData[1] == "2021" && lineData[2] == "0") {
+            //if (lineData[1] == "2021" && lineData[0] == "23734") {
                 if (currentPlayer == lastPlayer) {
                     PlayerUtils::appendStats(potentialPlayers.back(), lineData);
                 }
@@ -72,6 +73,8 @@ int main()
                 freeAgents.push_back(
                   std::move(potentialPlayers[static_cast<size_t>(index)]));
                 PlayerUtils::setInfo(freeAgents.back(), PlayerInfoParser.data());
+                PlayerUtils::setInfo(potentialPlayers[static_cast<size_t>(index)],
+                                     PlayerInfoParser.data());
             }
             else if (index != -1) {
                 PlayerUtils::setInfo(potentialPlayers[static_cast<size_t>(index)],
@@ -88,21 +91,18 @@ int main()
             filteredPlayer.push_back(std::move(player));
         }
     }
-    std::cout << std::left << std::setw(20) << "Name" << std::right << std::setw(9)
-              << "GP" << std::setw(9) << "Goals" << std::setw(9) << "Points"
-              << std::setw(9) << "+/-" << std::setw(9) << "ATOI" << std::setw(9)
-              << "Goals/60" << std::setw(9) << "A/60" << std::setw(9) << "Pts/60"
-              << std::setw(9) << "Shots/60" << std::setw(9) << "Shot%" << std::setw(9)
-              << "Hits/60" << std::setw(9) << "TK/60" << std::setw(9) << "TK rel"
-              << std::setw(9) << "SBlk/60" << '\n';
 
-    for (Player& player : freeAgents) {
-        if ((player.positions.isLeftDefenseman || player.positions.isRightDefenseman)
-            && player.stats.gamesPlayed >= 20) {
+    printDefHeader();
+    for (Player& player : filteredPlayer) {
+        if (!player.positions.isLeftDefenseman && !player.positions.isRightDefenseman) {
             PlayerUtils::customStats(player);
-            // if (player.customs.shots60 > 20.0) {
-            PlayerUtils::print(player);
-            //}
+            PlayerUtils::printDef(player);
+        }
+    }
+    for (Player& player : filteredPlayer) {
+        if (player.positions.isLeftDefenseman || player.positions.isRightDefenseman) {
+            PlayerUtils::customStats(player);
+            PlayerUtils::printDef(player);
         }
     }
     return 0;
