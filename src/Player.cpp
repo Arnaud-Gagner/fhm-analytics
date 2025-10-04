@@ -58,7 +58,6 @@ void PlayerUtils::setStats(Player& player, const std::vector<std::string>& stats
 
 void PlayerUtils::appendStats(Player& player, const std::vector<std::string>& stats)
 {
-    player.info.playerId += std::stoi(stats[0]);
     player.stats.gamesPlayed += std::stoi(stats[4]);
     player.stats.goals += std::stoi(stats[5]);
     player.stats.assists += std::stoi(stats[6]);
