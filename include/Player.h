@@ -84,6 +84,7 @@ struct CustomStats {
     double shots60 = 0.0;
     double hit60 = 0.0;
     double takeaway60 = 0.0;
+    double takeawayRel60 = 0.0;
     double shotblock60 = 0.0;
 };
 

@@ -141,6 +141,9 @@ void PlayerUtils::customStats(Player& player)
         player.customs.takeaway60 = static_cast<double>(player.stats.takeaway)
                                     / static_cast<double>(player.customs.totalToi)
                                     * 3600.0;
+        player.customs.takeawayRel60 = static_cast<double>(player.customs.takeawayRel)
+                                       / static_cast<double>(player.customs.totalToi)
+                                       * 3600.0;
         player.customs.shotblock60 = static_cast<double>(player.stats.shotblock)
                                      / static_cast<double>(player.customs.totalToi)
                                      * 3600.0;
@@ -171,9 +174,9 @@ void PlayerUtils::printDef(const Player& player)
               << player.customs.evAtoi << std::setw(9) << player.customs.atoi
               << std::setw(9) << player.customs.goal60 << std::setw(9)
               << player.customs.evAssist60 << std::setw(9) << player.customs.assist60
-              << std::setw(9) << player.customs.shots60 << std::setw(9)
-              << player.customs.shotPercentage << std::setw(9) << player.customs.hit60
-              << std::setw(9) << player.customs.takeaway60 << std::setw(9)
-              << player.customs.takeawayRel << std::setw(9) << player.customs.shotblock60
-              << '\n';
+              << std::setw(9) << player.customs.evPt60 << std::setw(9)
+              << player.customs.shots60 << std::setw(9) << player.customs.shotPercentage
+              << std::setw(9) << player.customs.hit60 << std::setw(9)
+              << player.customs.takeaway60 << std::setw(9) << player.customs.takeawayRel60
+              << std::setw(9) << player.customs.shotblock60 << '\n';
 }
