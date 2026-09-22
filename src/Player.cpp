@@ -56,7 +56,7 @@ void PlayerUtils::setStats(Player& player, const std::vector<std::string>& stats
     player.stats.fights = std::stoi(stats[25]);
 }
 
-void PlayerUtils::appendStats(Player& player, const std::vector<std::string>& stats)
+void PlayerUtils::addStats(Player& player, const std::vector<std::string>& stats)
 {
     player.stats.gamesPlayed += std::stoi(stats[4]);
     player.stats.goals += std::stoi(stats[5]);
@@ -158,25 +158,5 @@ int PlayerUtils::playerIndex(const std::string& id, const std::vector<Player>& p
             return static_cast<int>(i);
         }
     }
-
     return -1;
-}
-
-void PlayerUtils::printDef(const Player& player)
-{
-    std::string fullName = player.info.firstName + " " + player.info.lastName;
-
-    std::cout << std::left << std::setw(20) << fullName << std::right << std::setw(9)
-              << player.stats.gamesPlayed << std::setw(9) << player.stats.goals
-              << std::setw(9) << player.stats.assists << std::setw(9)
-              << player.customs.points << std::setw(9) << player.stats.plusminus
-              << std::setw(9) << std::fixed << std::setprecision(2)
-              << player.customs.evAtoi << std::setw(9) << player.customs.atoi
-              << std::setw(9) << player.customs.goal60 << std::setw(9)
-              << player.customs.evAssist60 << std::setw(9) << player.customs.assist60
-              << std::setw(9) << player.customs.evPt60 << std::setw(9)
-              << player.customs.shots60 << std::setw(9) << player.customs.shotPercentage
-              << std::setw(9) << player.customs.hit60 << std::setw(9)
-              << player.customs.takeaway60 << std::setw(9) << player.customs.takeawayRel60
-              << std::setw(9) << player.customs.shotblock60 << '\n';
 }

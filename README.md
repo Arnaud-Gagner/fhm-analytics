@@ -8,6 +8,17 @@ Tool that crunches data from *Franchise Hockey Manager* to filter the best playe
 
 The project reads hard-coded path (D:/) of csv folder and prints stats of the NHL players during the 2021 season.
 
+## Build
+
+```bash
+rm -rf build;
+mkdir build;
+cd build;
+cmake .. -G "Visual Studio 18 2026" -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake";
+cd ..;
+cmake --build build --config Release
+```
+
 ## TODO
 
 - 1. Configuration by yaml file

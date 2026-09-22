@@ -33,3 +33,4 @@ BraceWrapping:
   SplitEmptyNamespace: false
 BreakAfterReturnType: Automatic
 BreakBeforeBinaryOperators: All
+NamespaceIndentation: All
