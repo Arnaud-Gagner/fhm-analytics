@@ -6,7 +6,7 @@
 class wxMainWindow : public wxFrame
 {
 public:
-    wxMainWindow(wxWindow* parent = nullptr);
+    wxMainWindow();
     ~wxMainWindow() = default;
 };
 

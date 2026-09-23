@@ -5,12 +5,13 @@
 
 struct AppConfig_t {
     std::string folderPath = "";
+    char csvSeparator = ';';
     int positionThreshold = 15;
 };
 
 namespace AppConfig
 {
-    AppConfig_t load();
+    void load();
     void save();
 
     const AppConfig_t settings();

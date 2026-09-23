@@ -1,10 +1,6 @@
 #include <wx/app.h>
-#include <wx/display.h>
-#include <wx/filename.h>
-#include <wx/image.h>
-#include <wx/splash.h>
-#include <wx/stdpaths.h>
 
+#include "AppConfig.h"
 #include "wxMainWindow.h"
 
 class FhmAnalytics : public wxApp
@@ -24,6 +20,7 @@ int main(int argc, char** argv)
 
 bool FhmAnalytics::OnInit()
 {
+    AppConfig::load();
     wxMainWindow* mainWindow = new wxMainWindow();
     mainWindow->Show();
     return true;

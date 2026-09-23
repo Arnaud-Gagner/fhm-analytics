@@ -1,2 +1,3 @@
 folder_path = ""
+csv_separator = ";"
 position_threshold = 15
