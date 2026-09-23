@@ -4,34 +4,23 @@ Tool that crunches data from *Franchise Hockey Manager* to filter the best playe
 
 > *Note:* The project is a work-in-progress. I only own a copy of FHM 8 so I can't confirm it works on other versions.
 
-## Current Status
-
-The project reads hard-coded path (D:/) of csv folder and prints stats of the NHL players during the 2021 season.
-
 ## Build
 
 ```bash
 rm -rf build;
 mkdir build;
 cd build;
-cmake .. -G "Visual Studio 18 2026" -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake";
+cmake .. -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake";
 cd ..;
 cmake --build build --config Release
 ```
 
 ## TODO
 
-- 1. Configuration by yaml file
-- 2. Filter by league, positions and contract situation
-- 3. Filter by data
-- 4. Program reads arg for custom paths
-
-*Later...*
-
-- Track multiple years
-- Handle goalies
-- Benchmarks
-- Regression tests
+- 1. Parse data
+- 2. Create model of the data
+- 3. Custom Filter system
+- 4. Handle Goalies
 
 ## Contributions
 
