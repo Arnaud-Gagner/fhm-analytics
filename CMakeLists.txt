@@ -11,11 +11,10 @@ endif()
 
 set (SOURCES
     src/AppConfig.cpp
-    src/CsvParser.cpp
-    src/CsvRow.cpp
+    src/CsvUtils.cpp
     src/main.cpp
     src/Player.cpp
-    src/wMainWindow.cpp
+    src/wxMainWindow.cpp
 )
 
 file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS

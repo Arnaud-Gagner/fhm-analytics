@@ -54,8 +54,9 @@ void AppConfig::save()
 {
     std::unique_lock<std::mutex> lock(Locker);
 
-    std::fstream file("general.toml");
-    file << FOLDER_PATH_KEY << " = " << Config.folderPath << '\n';
+    std::fstream file(FILE_NAME);
+    file << FOLDER_PATH_KEY << " = \"" << Config.folderPath << "\"\n";
+    file << CSV_SEPARATOR_KEY << " = \"" << Config.csvSeparator << "\"\n";
     file << POSITION_THRESHOLD_KEY << " = " << Config.positionThreshold << '\n';
 }
 
@@ -67,8 +68,12 @@ const AppConfig_t AppConfig::settings()
 
 void AppConfig::validate(const AppConfig_t& config)
 {
-    std::unique_lock<std::mutex> lock(Locker);
     if (config.positionThreshold < 0 || config.positionThreshold > 20) {
         WARN("Position Threshold should be between 0 and 20 (included).");
     }
+    {
+        std::unique_lock<std::mutex> lock(Locker);
+        Config = config;
+    }
+    save();
 }
