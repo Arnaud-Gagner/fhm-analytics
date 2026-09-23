@@ -63,7 +63,11 @@ struct CustomStats {
     int shPoints = 0;
     int takeawayRel = 0;
     double shotPercentage = 0.0;
-    double atoi = 0.0; 
+    double totalToi = 0.0;
+    double evAtoi = 0.0;
+    double ppAtoi = 0.0;
+    double shAtoi = 0.0;
+    double atoi = 0.0;
     // normalized data
     double goal60 = 0.0;
     double assist60 = 0.0;
@@ -80,6 +84,7 @@ struct CustomStats {
     double shots60 = 0.0;
     double hit60 = 0.0;
     double takeaway60 = 0.0;
+    double takeawayRel60 = 0.0;
     double shotblock60 = 0.0;
 };
 
@@ -100,8 +105,7 @@ void appendStats(Player& player, const std::vector<std::string>& stats);
 void customStats(Player& player);
 
 int playerIndex(const std::string& id, const std::vector<Player>& players);
-void print(const Player& player);
+void printDef(const Player& player);
 }
-
 
 #endif // !PLAYER_H

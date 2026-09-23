@@ -11,17 +11,17 @@ class CsvParser
 {
 public:
     CsvParser(const char* filepath);
-    ~CsvParser();
+    ~CsvParser() = default;
 
     std::vector<std::string> data() const;
 
-    void setInterestColumns(const std::vector<int>& columns);
-
-    void close();
     bool nextLine();
 
 private:
-    std::ifstream mFile;
+    std::string mFileText;
+    size_t mLastIndex;
+    size_t mStartIndex;
+
     CsvRow mRow;
 };
 
