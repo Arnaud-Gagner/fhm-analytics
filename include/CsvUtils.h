@@ -5,7 +5,7 @@
 
 namespace CsvUtils
 {
-    void load(const char* filePath, char** buffer, size_t* size);
+    void load(const char* filePath, char** buffer, size_t& size);
 };
 
 #endif // !CSV_UTILS_H

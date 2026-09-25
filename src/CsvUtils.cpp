@@ -5,7 +5,7 @@
 
 #include "wxUtils.h"
 
-void CsvUtils::load(const char* filePath, char** buffer, size_t* size)
+void CsvUtils::load(const char* filePath, char** buffer, size_t& size)
 {
     FILE* file = fopen(filePath, "rb");
     if (!file) {
@@ -22,4 +22,10 @@ void CsvUtils::load(const char* filePath, char** buffer, size_t* size)
         TERMINATE("Failed to determine CSV file size");
     }
     rewind(file);
+
+    size = static_cast<size_t>(fileSize);
+    *buffer = static_cast<char*>(malloc(size + 1));
+    if (fread(*buffer, 1, size, file) < size) {
+        TERMINATE("buffer L");
+    }
 }
