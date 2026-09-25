@@ -1,6 +1,7 @@
 #ifndef APP_CONFIG_H
 #define APP_CONFIG_H
 
+#include <functional>
 #include <string>
 
 struct AppConfig_t {
@@ -16,6 +17,8 @@ namespace AppConfig
 
     const AppConfig_t settings();
     void validate(const AppConfig_t& config);
+
+    void setCallback(const std::function<void(const AppConfig_t&)>& callback);
 };
 
 #endif // !APP_CONFIG_H

@@ -21,6 +21,7 @@ int main(int argc, char** argv)
 bool FhmAnalytics::OnInit()
 {
     AppConfig::load();
+
     wxMainWindow* mainWindow = new wxMainWindow();
     mainWindow->Show();
     return true;

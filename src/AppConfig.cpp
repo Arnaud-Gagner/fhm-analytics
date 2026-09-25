@@ -3,12 +3,14 @@
 #include <mutex>
 #include <toml/toml.h>
 
-#include "wxNotifyUser.h"
+#include "wxUtils.h"
 
 namespace
 {
     AppConfig_t Config;
     std::mutex Locker;
+
+    std::function<void(const AppConfig_t&)> UpdateAppConfig;
 
     const char* FILE_NAME = "configs/general.toml";
 
@@ -76,4 +78,12 @@ void AppConfig::validate(const AppConfig_t& config)
         Config = config;
     }
     save();
+    if (UpdateAppConfig) {
+        UpdateAppConfig(config);
+    }
+}
+
+void AppConfig::setCallback(const std::function<void(const AppConfig_t&)>& callback)
+{
+    UpdateAppConfig = std::move(callback);
 }

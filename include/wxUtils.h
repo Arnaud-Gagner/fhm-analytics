@@ -1,7 +1,7 @@
-#ifndef WX_NOTIFY_USER
-#define WX_NOTIFY_USER
+#ifndef WX_UTILS_H
+#define WX_UTILS_H
 
-#include <wx/msgdlg.h>
+#include <wx/wx.h>
 
 #define ASSERT(condition, msg)                                                           \
     if (!(condition)) {                                                                  \
@@ -15,4 +15,9 @@
 
 #define WARN(msg) wxMessageBox(msg, "WARNING", wxOK | wxICON_WARNING);
 
-#endif // !WX_NOTIFY_USER
+namespace wxUtils
+{
+    void labelWidget(wxSizer* sizer, wxWindow* widget, const wxString& label);
+}
+
+#endif // !WX_UTILS_H

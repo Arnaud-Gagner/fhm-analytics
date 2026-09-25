@@ -14,7 +14,9 @@ set (SOURCES
     src/CsvUtils.cpp
     src/main.cpp
     src/Player.cpp
+    src/wxAppConfig.cpp
     src/wxMainWindow.cpp
+    src/wxUtils.cpp
 )
 
 file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS

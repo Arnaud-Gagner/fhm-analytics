@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "wxNotifyUser.h"
+#include "wxUtils.h"
 
 void CsvUtils::load(const char* filePath, char** buffer, size_t* size)
 {

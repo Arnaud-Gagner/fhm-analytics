@@ -3,9 +3,11 @@
 #include <wx/wx.h>
 
 #include "AppConfig.h"
+#include "wxAppConfig.h"
 
 wxMainWindow::wxMainWindow()
   : wxFrame(nullptr, wxID_ANY, "fhm-analytics v0.4.0")
+  , mAppConfigWidget{ new wxAppConfig(this) }
 {
     Maximize(true);
 
@@ -21,9 +23,7 @@ wxMainWindow::wxMainWindow()
       wxEVT_MENU, [this](wxCommandEvent&) { askNewFolderPath(); }, folderPath->GetId());
     Bind(
       wxEVT_MENU,
-      [this](wxCommandEvent&) {
-          // TODO
-      },
+      [this](wxCommandEvent&) { mAppConfigWidget->Show(); },
       modifyConfig->GetId());
 }
 

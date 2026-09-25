@@ -3,6 +3,8 @@
 
 #include <wx/frame.h>
 
+class wxAppConfig;
+
 class wxMainWindow : public wxFrame
 {
 public:
@@ -11,6 +13,9 @@ public:
 
 private:
     void askNewFolderPath();
+
+private:
+    wxAppConfig* mAppConfigWidget;
 };
 
 #endif // !WX_MAIN_WINDOW_H
