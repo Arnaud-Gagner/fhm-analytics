@@ -25,9 +25,12 @@ bool FhmAnalytics::OnInit()
 
     char* buffer = nullptr;
     size_t bufferSize = 0;
-    std::string file = AppConfig::settings().folderPath + "/boxscore_skater_summary.csv";
+    std::string file = AppConfig::settings().folderPath + "/player_master.csv";
 
     CsvUtils::load(file.c_str(), &buffer, bufferSize);
+
+    std::vector<Player_t> players{};
+    CsvUtils::interpretMaster(players, buffer, bufferSize);
 
     wxMainWindow* mainWindow = new wxMainWindow();
     mainWindow->Show();
