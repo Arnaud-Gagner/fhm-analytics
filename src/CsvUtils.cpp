@@ -7,7 +7,7 @@
 
 namespace
 {
-    bool infoLine(char* buffer, char* fields[14])
+    bool infoLine(char* buffer, char* fields[15])
     {
         fields[0] = buffer;
         size_t fieldIndex = 0;
@@ -17,21 +17,116 @@ namespace
                 buffer[i] == '\0';
                 return fieldIndex == 14;
             }
-            if (buffer[i] == ';') {
+            if (buffer[i] == ';' && fieldIndex <= 13) {
                 buffer[i] = '\0';
                 fieldIndex++;
                 fields[fieldIndex] = &buffer[i + 1];
+            }
+            else if (buffer[i] == ';' && fieldIndex > 14) {
+                buffer[i] = '\0';
+                return false;
             }
         }
         return true;
     }
 
-    void deserializeInfo(Player_t& player, char* fields[14])
+    void deserializeInfo(Player_t& player, char* fields[15])
     {
-        player.id = atoi(fields[0]);
+        player.info.id = atoi(fields[0]);
+        player.info.teamId = atoi(fields[1]);
         strncpy(player.info.firstName, fields[3], sizeof(player.info.firstName) - 1);
         strncpy(player.info.lastName, fields[4], sizeof(player.info.lastName) - 1);
         strncpy(player.info.birthDate, fields[8], sizeof(player.info.birthDate) - 1);
+    }
+
+    bool ratingsLine(char* buffer, char* fields[58])
+    {
+        // TODO: skips line when got all the positions data
+        fields[0] = buffer;
+        size_t fieldIndex = 0;
+
+        for (size_t i = 0; i < 512; ++i) {
+            if (buffer[i] == '\n' || buffer[i] == '\0') {
+                buffer[i] == '\0';
+                return fieldIndex == 57;
+            }
+            if (buffer[i] == ';' && fieldIndex <= 56) {
+                buffer[i] = '\0';
+                fieldIndex++;
+                fields[fieldIndex] = &buffer[i + 1];
+            }
+            else if (buffer[i] == ';' && fieldIndex > 57) {
+                buffer[i] = '\0';
+                return false;
+            }
+        }
+        return true;
+    }
+
+    void deserializeRatings(Player_t& player, char* fields[58])
+    {
+        player.position.g = std::atoi(fields[1]);
+        player.position.ld = std::atoi(fields[2]);
+        player.position.rd = std::atoi(fields[3]);
+        player.position.lw = std::atoi(fields[4]);
+        player.position.c = std::atoi(fields[5]);
+        player.position.rw = std::atoi(fields[6]);
+    }
+
+    bool statsLine(char* buffer, char* fields[41])
+    {
+        fields[0] = buffer;
+        size_t fieldIndex = 0;
+
+        for (size_t i = 0; i < 512; ++i) {
+            if (buffer[i] == '\n' || buffer[i] == '\0') {
+                buffer[i] == '\0';
+                return fieldIndex == 40;
+            }
+            if (buffer[i] == ';' && fieldIndex <= 39) {
+                buffer[i] = '\0';
+                fieldIndex++;
+                fields[fieldIndex] = &buffer[i + 1];
+            }
+            else if (buffer[i] == ';' && fieldIndex > 40) {
+                buffer[i] = '\0';
+                return false;
+            }
+        }
+        return true;
+    }
+
+    void deserializeStats(Player_t& player, char* fields[41])
+    {
+        player.stat.gp = atoi(fields[3]);
+        player.stat.goals = atoi(fields[4]);
+        player.stat.assists = atoi(fields[5]);
+        player.stat.plusMinus = atoi(fields[6]);
+        player.stat.pim = atoi(fields[7]);
+        player.stat.ppg = atoi(fields[8]);
+        player.stat.ppa = atoi(fields[9]);
+        player.stat.shg = atoi(fields[10]);
+        player.stat.sha = atoi(fields[11]);
+        player.stat.fight = atoi(fields[12]);
+        player.stat.fightWon = atoi(fields[13]);
+        player.stat.hits = atoi(fields[14]);
+        player.stat.gva = atoi(fields[15]);
+        player.stat.tka = atoi(fields[16]);
+        player.stat.sb = atoi(fields[17]);
+        player.stat.shots = atoi(fields[21]);
+        player.stat.toi = atoi(fields[22]);
+        player.stat.pptoi = atoi(fields[23]);
+        player.stat.shtoi = atoi(fields[24]);
+        player.stat.pdo = atoi(fields[25]);
+        player.stat.gf60 = atoi(fields[26]);
+        player.stat.ga60 = atoi(fields[27]);
+        player.stat.sf60 = atoi(fields[28]);
+        player.stat.sa60 = atoi(fields[29]);
+        player.stat.cf = atoi(fields[30]);
+        player.stat.cfRel = atoi(fields[33]);
+        player.stat.gwg = atoi(fields[38]);
+        player.stat.fo = atoi(fields[39]);
+        player.stat.fow = atoi(fields[40]);
     }
 }
 
@@ -60,10 +155,12 @@ void CsvUtils::load(const char* filePath, char** buffer, size_t& size)
     }
 }
 
-void CsvUtils::interpretMaster(std::vector<Player_t>& players,
+void CsvUtils::interpretMaster(std::unordered_map<u32, Player_t>& players,
                                const char* buffer,
                                size_t size)
 {
+    // TODO: avoid vector or at least reserve place
+    // TODO: avoid creating a copy of a lines
     size_t bufferIndex = strchr(buffer, '\n') - buffer;
 
     bool isFileFinished = false;
@@ -76,19 +173,80 @@ void CsvUtils::interpretMaster(std::vector<Player_t>& players,
         if (!ptrEndl) {
             return;
         }
-        std::memcpy(&line, ptrPosition, ptrEndl - ptrPosition + 1);
-        line[511] = '\0';
+        size_t lineLen = static_cast<size_t>(ptrEndl - ptrPosition) + 1;
+        if (lineLen >= sizeof(line)) {
+            // log/skip malformed line instead of overflowing
+            bufferIndex = ptrPosition - buffer;
+            isFileFinished = bufferIndex + 1 >= size;
+            continue;
+        }
+        std::memcpy(line, ptrPosition, lineLen);
+        line[lineLen] = '\0';
 
-        char* fields[15] = {};
+        char* fields[58] = {};
         if (infoLine(line, fields)) {
             deserializeInfo(player, fields);
-            players.push_back(std::move(player));
+            players.insert_or_assign(player.info.id, player);
         }
         bufferIndex = ptrPosition - buffer;
         isFileFinished = bufferIndex + 1 >= size;
     }
 }
 
-void CsvUtils::interpretRatings(const char* buffer, size_t size) {}
+void CsvUtils::interpretRatings(std::unordered_map<u32, Player_t>& players,
+                                const char* buffer,
+                                size_t size)
+{
+    // TODO: avoid vector or at least reserve place
+    // TODO: avoid creating a copy of a lines
+    size_t bufferIndex = strchr(buffer, '\n') - buffer;
 
-void CsvUtils::interpretSats(const char* buffer, size_t size) {}
+    bool isFileFinished = false;
+    while (!isFileFinished) {
+        char line[512] = {};
+
+        const char* ptrPosition = strchr(buffer + bufferIndex, '\n') + 1;
+        const char* ptrEndl = strchr(ptrPosition, '\n');
+        if (!ptrEndl) {
+            return;
+        }
+        std::memcpy(&line, ptrPosition, ptrEndl - ptrPosition + 1);
+        line[511] = '\0';
+
+        char* fields[15] = {};
+        if (ratingsLine(line, fields)) {
+            deserializeRatings(players[std::atoi(fields[0])], fields);
+        }
+        bufferIndex = ptrPosition - buffer;
+        isFileFinished = bufferIndex + 1 >= size;
+    }
+}
+
+void CsvUtils::interpretStats(std::unordered_map<u32, Player_t>& players,
+                              const char* buffer,
+                              size_t size)
+{
+    // TODO: avoid vector or at least reserve place
+    // TODO: avoid creating a copy of a lines
+    size_t bufferIndex = strchr(buffer, '\n') - buffer;
+
+    bool isFileFinished = false;
+    while (!isFileFinished) {
+        char line[512] = {};
+
+        const char* ptrPosition = strchr(buffer + bufferIndex, '\n') + 1;
+        const char* ptrEndl = strchr(ptrPosition, '\n');
+        if (!ptrEndl) {
+            return;
+        }
+        std::memcpy(&line, ptrPosition, ptrEndl - ptrPosition + 1);
+        line[511] = '\0';
+
+        char* fields[41] = {};
+        if (statsLine(line, fields)) {
+            deserializeStats(players[std::atoi(fields[0])], fields);
+        }
+        bufferIndex = ptrPosition - buffer;
+        isFileFinished = bufferIndex + 1 >= size;
+    }
+}

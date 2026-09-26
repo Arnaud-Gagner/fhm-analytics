@@ -19,18 +19,35 @@ int main(int argc, char** argv)
     return wxEntry(argc, argv);
 }
 
+#include <iostream>
+
 bool FhmAnalytics::OnInit()
 {
     AppConfig::load();
 
-    char* buffer = nullptr;
-    size_t bufferSize = 0;
-    std::string file = AppConfig::settings().folderPath + "/player_master.csv";
+    std::unordered_map<u32, Player_t> players{};
 
-    CsvUtils::load(file.c_str(), &buffer, bufferSize);
+    char* masterBuffer = nullptr;
+    size_t masterSize = 0;
+    std::string masterFile = AppConfig::settings().folderPath + "/player_master.csv";
 
-    std::vector<Player_t> players{};
-    CsvUtils::interpretMaster(players, buffer, bufferSize);
+    CsvUtils::load(masterFile.c_str(), &masterBuffer, masterSize);
+    CsvUtils::interpretMaster(players, masterBuffer, masterSize);
+
+    char* ratingsBuffer = nullptr;
+    size_t ratingsSize = 0;
+    std::string ratingsFile = AppConfig::settings().folderPath + "/player_ratings.csv";
+
+    CsvUtils::load(ratingsFile.c_str(), &ratingsBuffer, ratingsSize);
+    CsvUtils::interpretRatings(players, ratingsBuffer, ratingsSize);
+
+    char* statsBuffer = nullptr;
+    size_t statsSize = 0;
+    std::string statsFile
+      = AppConfig::settings().folderPath + "/player_skater_stats_rs.csv";
+
+    CsvUtils::load(statsFile.c_str(), &statsBuffer, statsSize);
+    CsvUtils::interpretStats(players, statsBuffer, statsSize);
 
     wxMainWindow* mainWindow = new wxMainWindow();
     mainWindow->Show();
