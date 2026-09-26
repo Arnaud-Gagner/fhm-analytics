@@ -19,8 +19,6 @@ int main(int argc, char** argv)
     return wxEntry(argc, argv);
 }
 
-#include <iostream>
-
 bool FhmAnalytics::OnInit()
 {
     AppConfig::load();

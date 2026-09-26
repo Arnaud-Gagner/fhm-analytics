@@ -51,20 +51,50 @@ struct Stats_t {
     float ga60 = 0.0f;
     float sf60 = 0.0f;
     float sa60 = 0.0f;
-    float cf = 0.0f;
+    u8 cf = 0.0f;
+    u8 ca = 0.0f;
+    float cfPer = 0.0f;
     float cfRel = 0.0f;
     u16 gwg = 0;
     u16 fo = 0;
     u16 fow = 0;
 };
 
+struct CalcStats_t {
+    u16 pt = 0;
+    u16 ppPt = 0;
+    u16 shPt = 0;
+    u16 tkRel = 0;
+    float shotsPer = 0.0f;
+    u16 evGoal = 0;
+    u16 evAssist = 0;
+    u16 evPt = 0;
+    u16 totalToi = 0;
+    u16 atoi = 0;
+    u16 apptoi = 0;
+    u16 ashtoi = 0;
+    float goal60 = 0.0f;
+    float assist60 = 0.0f;
+    float pt60 = 0.0f;
+    float evGoal60 = 0.0f;
+    float evAssist60 = 0.0f;
+    float evPt60 = 0.0f;
+    float shot60 = 0.0f;
+    float hit60 = 0.0f;
+    float sb60 = 0.0f;
+    float tkRel60 = 0.0f;
+};
+
 struct Player_t {
     Info_t info{};
     Position_t position{};
     Stats_t stat{};
+    CalcStats_t calc{};
 };
 
 namespace Player
-{}
+{
+    void calcStats(Player_t& player);
+}
 
 #endif // !PLAYER_H
