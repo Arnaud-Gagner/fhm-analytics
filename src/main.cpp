@@ -61,7 +61,19 @@ bool FhmAnalytics::OnInit()
     CsvUtils::load(statsFile.c_str(), &statsBuffer, statsSize);
     CsvUtils::interpretStats(players, statsBuffer, statsSize);
 
+    // TODO: totally temp, do a real filtering system
+    Players_t filtered{};
+    for (const auto& [id, player] : players) {
+        if (player.info.leagueId == 13 && player.stat.gp > 10
+            && (player.stat.sf60 - player.stat.sa60 > 0) && player.stat.cfRel > 0.0f) {
+            Player_t filteredPlayer = player;
+            Player::calcStats(filteredPlayer);
+            filtered.insert_or_assign(id, filteredPlayer);
+        }
+    }
+
     wxMainWindow* mainWindow = new wxMainWindow();
     mainWindow->Show();
+    mainWindow->setPlayers(filtered);
     return true;
 }

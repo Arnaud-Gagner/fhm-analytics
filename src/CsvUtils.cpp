@@ -35,7 +35,7 @@ namespace
 
         for (size_t i = 0; i < 512; ++i) {
             if (buffer[i] == '\n' || buffer[i] == '\0') {
-                buffer[i] == '\0';
+                buffer[i] = '\0';
                 return fieldIndex == 14;
             }
             if (buffer[i] == ';' && fieldIndex <= 13) {
@@ -101,7 +101,7 @@ namespace
 
         for (size_t i = 0; i < 512; ++i) {
             if (buffer[i] == '\n' || buffer[i] == '\0') {
-                buffer[i] == '\0';
+                buffer[i] = '\0';
                 return fieldIndex == 40;
             }
             if (buffer[i] == ';' && fieldIndex <= 39) {
@@ -120,8 +120,8 @@ namespace
     void deserializeStats(Player_t& player, char* fields[41])
     {
         player.stat.gp = atoi(fields[3]);
-        player.stat.goals = atoi(fields[4]);
-        player.stat.assists = atoi(fields[5]);
+        player.stat.goal = atoi(fields[4]);
+        player.stat.assist = atoi(fields[5]);
         player.stat.plusMinus = atoi(fields[6]);
         player.stat.pim = atoi(fields[7]);
         player.stat.ppg = atoi(fields[8]);
@@ -130,11 +130,11 @@ namespace
         player.stat.sha = atoi(fields[11]);
         player.stat.fight = atoi(fields[12]);
         player.stat.fightWon = atoi(fields[13]);
-        player.stat.hits = atoi(fields[14]);
+        player.stat.hit = atoi(fields[14]);
         player.stat.gva = atoi(fields[15]);
         player.stat.tka = atoi(fields[16]);
         player.stat.sb = atoi(fields[17]);
-        player.stat.shots = atoi(fields[21]);
+        player.stat.shot = atoi(fields[21]);
         player.stat.toi = atoi(fields[22]);
         player.stat.pptoi = atoi(fields[23]);
         player.stat.shtoi = atoi(fields[24]);
@@ -258,9 +258,10 @@ void CsvUtils::interpretRatings(Players_t& players, const char* buffer, size_t s
         std::memcpy(&line, ptrPosition, ptrEndl - ptrPosition + 1);
         line[511] = '\0';
 
-        char* fields[15] = {};
+        char* fields[58] = {};
         if (ratingsLine(line, fields)) {
-            deserializeRatings(players[std::atoi(fields[0])], fields);
+            u32 id = std::atoi(fields[0]);
+            deserializeRatings(players[id], fields);
         }
         bufferIndex = ptrPosition - buffer;
         isFileFinished = bufferIndex + 1 >= size;

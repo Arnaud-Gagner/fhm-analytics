@@ -4,10 +4,12 @@
 
 #include "AppConfig.h"
 #include "wxAppConfig.h"
+#include "wxPlayerGrid.h"
 
 wxMainWindow::wxMainWindow()
   : wxFrame(nullptr, wxID_ANY, "fhm-analytics v0.4.0")
   , mAppConfigWidget{ new wxAppConfig(this) }
+  , mPlayerGrid{ new wxPlayerGrid(this) }
 {
     Maximize(true);
 
@@ -19,12 +21,21 @@ wxMainWindow::wxMainWindow()
 
     SetMenuBar(menuBar);
 
+    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
+    mainSizer->Add(mPlayerGrid, 1, wxEXPAND | wxALL, 10);
+    SetSizer(mainSizer);
+
     Bind(
       wxEVT_MENU, [this](wxCommandEvent&) { askNewFolderPath(); }, folderPath->GetId());
     Bind(
       wxEVT_MENU,
       [this](wxCommandEvent&) { mAppConfigWidget->Show(); },
       modifyConfig->GetId());
+}
+
+void wxMainWindow::setPlayers(const Players_t& players)
+{
+    mPlayerGrid->setPlayers(players);
 }
 
 void wxMainWindow::askNewFolderPath()

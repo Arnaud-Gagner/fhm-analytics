@@ -31,8 +31,8 @@ struct Info_t {
 
 struct Stats_t {
     u16 gp = 0;
-    u16 goals = 0;
-    u16 assists = 0;
+    u16 goal = 0;
+    u16 assist = 0;
     i16 plusMinus = 0;
     u16 pim = 0;
     u16 ppg = 0;
@@ -41,14 +41,14 @@ struct Stats_t {
     u16 sha = 0;
     u16 fight = 0;
     u16 fightWon = 0;
-    u16 hits = 0;
+    u16 hit = 0;
     u16 gva = 0;
     u16 tka = 0;
     u16 sb = 0;
-    u16 shots = 0;
-    u16 toi = 0;
-    u16 pptoi = 0;
-    u16 shtoi = 0;
+    u16 shot = 0;
+    u32 toi = 0;
+    u32 pptoi = 0;
+    u32 shtoi = 0;
     float pdo = 0.0f;
     float gf60 = 0.0f;
     float ga60 = 0.0f;
@@ -68,14 +68,15 @@ struct CalcStats_t {
     u16 ppPt = 0;
     u16 shPt = 0;
     i16 tkRel = 0;
-    float shotsPer = 0.0f;
+    float shotPer = 0.0f;
     u16 evGoal = 0;
     u16 evAssist = 0;
     u16 evPt = 0;
-    u16 totalToi = 0;
-    u16 atoi = 0;
-    u16 apptoi = 0;
-    u16 ashtoi = 0;
+    u32 totalToi = 0;
+    float atoi = 0;
+    float aevtoi = 0;
+    float apptoi = 0;
+    float ashtoi = 0;
     float goal60 = 0.0f;
     float assist60 = 0.0f;
     float pt60 = 0.0f;
