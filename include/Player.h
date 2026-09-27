@@ -2,7 +2,10 @@
 #define PLAYER_H
 
 #include <cstdint>
-#include <string>
+#include <unordered_map>
+
+using i16 = int16_t;
+using i32 = int32_t;
 
 using u8 = uint8_t;
 using u16 = uint16_t;
@@ -19,8 +22,8 @@ struct Position_t {
 
 struct Info_t {
     u32 id = 0;
-    u16 teamId = 0;
-    u16 leagueId = 0;
+    i32 teamId = 0;
+    i16 leagueId = 0;
     char firstName[32] = {};
     char lastName[32] = {};
     char birthDate[32] = {};
@@ -30,7 +33,7 @@ struct Stats_t {
     u16 gp = 0;
     u16 goals = 0;
     u16 assists = 0;
-    u16 plusMinus = 0;
+    i16 plusMinus = 0;
     u16 pim = 0;
     u16 ppg = 0;
     u16 ppa = 0;
@@ -51,8 +54,8 @@ struct Stats_t {
     float ga60 = 0.0f;
     float sf60 = 0.0f;
     float sa60 = 0.0f;
-    u8 cf = 0.0f;
-    u8 ca = 0.0f;
+    u8 cf = 0;
+    u8 ca = 0;
     float cfPer = 0.0f;
     float cfRel = 0.0f;
     u16 gwg = 0;
@@ -64,7 +67,7 @@ struct CalcStats_t {
     u16 pt = 0;
     u16 ppPt = 0;
     u16 shPt = 0;
-    u16 tkRel = 0;
+    i16 tkRel = 0;
     float shotsPer = 0.0f;
     u16 evGoal = 0;
     u16 evAssist = 0;
@@ -91,6 +94,9 @@ struct Player_t {
     Stats_t stat{};
     CalcStats_t calc{};
 };
+
+using Players_t = std::unordered_map<u32, Player_t>;
+using Teams_t = std::unordered_map<i32, i16>;
 
 namespace Player
 {

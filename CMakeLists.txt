@@ -16,6 +16,7 @@ set (SOURCES
     src/Player.cpp
     src/wxAppConfig.cpp
     src/wxMainWindow.cpp
+    src/wxPlayerGrid.cpp
     src/wxUtils.cpp
 )
 

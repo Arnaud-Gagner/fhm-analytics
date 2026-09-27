@@ -23,15 +23,28 @@ bool FhmAnalytics::OnInit()
 {
     AppConfig::load();
 
-    std::unordered_map<u32, Player_t> players{};
+    // [AG] get teams
+    Teams_t teams{};
 
+    char* teamBuffer = nullptr;
+    size_t teamSize = 0;
+    std::string teamFile = AppConfig::settings().folderPath + "/team_data.csv";
+
+    CsvUtils::load(teamFile.c_str(), &teamBuffer, teamSize);
+    CsvUtils::interpretTeam(teams, teamBuffer, teamSize);
+
+    // [AG] get players
+    Players_t players{};
+
+    // [AG] get players info
     char* masterBuffer = nullptr;
     size_t masterSize = 0;
     std::string masterFile = AppConfig::settings().folderPath + "/player_master.csv";
 
     CsvUtils::load(masterFile.c_str(), &masterBuffer, masterSize);
-    CsvUtils::interpretMaster(players, masterBuffer, masterSize);
+    CsvUtils::interpretMaster(teams, players, masterBuffer, masterSize);
 
+    // [AG] get players positions
     char* ratingsBuffer = nullptr;
     size_t ratingsSize = 0;
     std::string ratingsFile = AppConfig::settings().folderPath + "/player_ratings.csv";
@@ -39,6 +52,7 @@ bool FhmAnalytics::OnInit()
     CsvUtils::load(ratingsFile.c_str(), &ratingsBuffer, ratingsSize);
     CsvUtils::interpretRatings(players, ratingsBuffer, ratingsSize);
 
+    // [AG] get players stats
     char* statsBuffer = nullptr;
     size_t statsSize = 0;
     std::string statsFile

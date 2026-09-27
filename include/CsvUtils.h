@@ -10,15 +10,14 @@ namespace CsvUtils
 {
     void load(const char* filePath, char** buffer, size_t& size);
 
-    void interpretMaster(std::unordered_map<u32, Player_t>& players,
+    void interpretTeam(Teams_t& teams, const char* buffer, size_t size);
+
+    void interpretMaster(const Teams_t& teams,
+                         Players_t& players,
                          const char* buffer,
                          size_t size);
-    void interpretRatings(std::unordered_map<u32, Player_t>& players,
-                          const char* buffer,
-                          size_t size);
-    void interpretStats(std::unordered_map<u32, Player_t>& players,
-                        const char* buffer,
-                        size_t size);
+    void interpretRatings(Players_t& players, const char* buffer, size_t size);
+    void interpretStats(Players_t& players, const char* buffer, size_t size);
 };
 
 #endif // !CSV_UTILS_H

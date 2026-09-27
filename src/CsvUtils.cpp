@@ -7,6 +7,27 @@
 
 namespace
 {
+    bool teamLine(char* buffer, i32& teamId, i16& leagueId)
+    {
+        char* text = buffer;
+        int cnt = 0;
+        for (size_t i = 0; i < 512; ++i) {
+            if (buffer[i] == ';') {
+                buffer[i] = '\0';
+                if (cnt == 0) {
+                    teamId = std::atoi(text);
+                    cnt++;
+                    text = &buffer[i + 1];
+                }
+                else {
+                    leagueId = std::atoi(text);
+                    return true;
+                }
+            }
+        }
+        return true;
+    }
+
     bool infoLine(char* buffer, char* fields[15])
     {
         fields[0] = buffer;
@@ -157,7 +178,37 @@ void CsvUtils::load(const char* filePath, char** buffer, size_t& size)
     }
 }
 
-void CsvUtils::interpretMaster(std::unordered_map<u32, Player_t>& players,
+void CsvUtils::interpretTeam(Teams_t& teams, const char* buffer, size_t size)
+{
+    // TODO: avoid vector or at least reserve place
+    // TODO: avoid creating a copy of a lines
+    teams.insert_or_assign(-1, -1);
+    size_t bufferIndex = strchr(buffer, '\n') - buffer;
+
+    bool isFileFinished = false;
+    while (!isFileFinished) {
+        char line[512] = {};
+
+        const char* ptrPosition = strchr(buffer + bufferIndex, '\n') + 1;
+        const char* ptrEndl = strchr(ptrPosition, '\n');
+        if (!ptrEndl) {
+            return;
+        }
+        std::memcpy(&line, ptrPosition, ptrEndl - ptrPosition + 1);
+        line[511] = '\0';
+
+        i32 teamId = 0;
+        i16 leagueId = 0;
+        if (teamLine(line, teamId, leagueId)) {
+            teams.insert_or_assign(teamId, leagueId);
+        }
+        bufferIndex = ptrPosition - buffer;
+        isFileFinished = bufferIndex + 1 >= size;
+    }
+}
+
+void CsvUtils::interpretMaster(const Teams_t& teams,
+                               Players_t& players,
                                const char* buffer,
                                size_t size)
 {
@@ -175,19 +226,13 @@ void CsvUtils::interpretMaster(std::unordered_map<u32, Player_t>& players,
         if (!ptrEndl) {
             return;
         }
-        size_t lineLen = static_cast<size_t>(ptrEndl - ptrPosition) + 1;
-        if (lineLen >= sizeof(line)) {
-            // log/skip malformed line instead of overflowing
-            bufferIndex = ptrPosition - buffer;
-            isFileFinished = bufferIndex + 1 >= size;
-            continue;
-        }
-        std::memcpy(line, ptrPosition, lineLen);
-        line[lineLen] = '\0';
+        std::memcpy(&line, ptrPosition, ptrEndl - ptrPosition + 1);
+        line[511] = '\0';
 
         char* fields[58] = {};
         if (infoLine(line, fields)) {
             deserializeInfo(player, fields);
+            player.info.leagueId = teams.at(player.info.teamId);
             players.insert_or_assign(player.info.id, player);
         }
         bufferIndex = ptrPosition - buffer;
@@ -195,9 +240,7 @@ void CsvUtils::interpretMaster(std::unordered_map<u32, Player_t>& players,
     }
 }
 
-void CsvUtils::interpretRatings(std::unordered_map<u32, Player_t>& players,
-                                const char* buffer,
-                                size_t size)
+void CsvUtils::interpretRatings(Players_t& players, const char* buffer, size_t size)
 {
     // TODO: avoid vector or at least reserve place
     // TODO: avoid creating a copy of a lines
@@ -224,9 +267,7 @@ void CsvUtils::interpretRatings(std::unordered_map<u32, Player_t>& players,
     }
 }
 
-void CsvUtils::interpretStats(std::unordered_map<u32, Player_t>& players,
-                              const char* buffer,
-                              size_t size)
+void CsvUtils::interpretStats(Players_t& players, const char* buffer, size_t size)
 {
     // TODO: avoid vector or at least reserve place
     // TODO: avoid creating a copy of a lines
