@@ -17,10 +17,10 @@ cmake --build build --config Release
 
 ## TODO
 
-- 1. Parse data
-- 2. Create model of the data
-- 3. Custom Filter system
-- 4. Handle Goalies
+1. Custom filter system
+2. Sorting by categories
+3. Handle goalies
+4. Optimize parsing (for fun)
 
 ## Contributions
 
