@@ -1,6 +1,7 @@
 #include "FhmAnalytics.h"
 
 #include <mutex>
+#include <vector>
 
 #include "AppConfig.h"
 #include "CsvUtils.h"
@@ -11,6 +12,9 @@ namespace
 {
     std::unordered_map<u32, Player_t> UnfilteredPlayers{};
     std::mutex UnfilteredMutex;
+
+    std::vector<Player_t> FilteredPlayers = {};
+    std::mutex FilteredMutex;
 }
 
 void FhmAnalytics::init()
@@ -59,4 +63,21 @@ void FhmAnalytics::loadGameFiles()
 
     CsvUtils::load(statsFile.c_str(), &statsBuffer, statsSize);
     CsvUtils::interpretStats(UnfilteredPlayers, statsBuffer, statsSize);
+
+    applyFilter();
+}
+
+void FhmAnalytics::applyFilter()
+{
+    const Filter_t filter = FilterConfig::filter();
+
+    std::unique_lock<std::mutex> lock(FilteredMutex);
+    FilteredPlayers = {};
+    // TODO: gros filtrage
+}
+
+const std::vector<Player_t>& FhmAnalytics::filteredPlayers()
+{
+    std::unique_lock<std::mutex> lock(FilteredMutex);
+    return FilteredPlayers;
 }

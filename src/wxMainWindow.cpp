@@ -33,7 +33,7 @@ wxMainWindow::wxMainWindow()
       modifyConfig->GetId());
 }
 
-void wxMainWindow::setPlayers(const std::unordered_map<u32, Player_t>& players)
+void wxMainWindow::setPlayers(const std::vector<Player_t>& players)
 {
     mPlayerGrid->setPlayers(players);
 }

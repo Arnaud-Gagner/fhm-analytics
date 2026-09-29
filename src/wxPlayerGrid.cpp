@@ -47,7 +47,7 @@ wxPlayerGrid::wxPlayerGrid(wxWindow* parent)
     SetSizerAndFit(mainSizer);
 }
 
-void wxPlayerGrid::setPlayers(const std::unordered_map<u32, Player_t>& players)
+void wxPlayerGrid::setPlayers(const std::vector<Player_t>& players)
 {
     mTable->BeginBatch();
 
@@ -57,7 +57,7 @@ void wxPlayerGrid::setPlayers(const std::unordered_map<u32, Player_t>& players)
     mTable->AppendRows(static_cast<int>(players.size()));
 
     int row = 0;
-    for (const auto& [id, player] : players) {
+    for (const Player_t& player : players) {
         const Info_t& info = player.info;
         const Stats_t& stat = player.stat;
         const CalcStats_t& calc = player.calc;

@@ -24,5 +24,6 @@ bool wxFhmAnalytics::OnInit()
 
     wxMainWindow* mainWindow = new wxMainWindow();
     mainWindow->Show();
+    mainWindow->setPlayers(FhmAnalytics::filteredPlayers());
     return true;
 }

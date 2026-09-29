@@ -22,6 +22,7 @@ struct Filter_t {
 namespace FilterConfig
 {
     void load();
+    Filter_t filter();
 }
 
 #endif // !FILTER_CONFIG_H
