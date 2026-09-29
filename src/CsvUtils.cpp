@@ -57,7 +57,11 @@ namespace
         player.info.teamId = atoi(fields[1]);
         strncpy(player.info.firstName, fields[3], sizeof(player.info.firstName) - 1);
         strncpy(player.info.lastName, fields[4], sizeof(player.info.lastName) - 1);
-        strncpy(player.info.birthDate, fields[8], sizeof(player.info.birthDate) - 1);
+        strncpy(player.info.birthDate, fields[11], sizeof(player.info.birthDate) - 1);
+        strncpy(player.info.nationality, fields[12], sizeof(player.info.nationality) - 1);
+        strncpy(player.info.secondNationality,
+                fields[8],
+                sizeof(player.info.secondNationality) - 1);
     }
 
     bool ratingsLine(char* buffer, char* fields[58])
@@ -178,7 +182,9 @@ void CsvUtils::load(const char* filePath, char** buffer, size_t& size)
     }
 }
 
-void CsvUtils::interpretTeam(Teams_t& teams, const char* buffer, size_t size)
+void CsvUtils::interpretTeam(std::unordered_map<i32, i16>& teams,
+                             const char* buffer,
+                             size_t size)
 {
     // TODO: avoid vector or at least reserve place
     // TODO: avoid creating a copy of a lines
@@ -207,8 +213,8 @@ void CsvUtils::interpretTeam(Teams_t& teams, const char* buffer, size_t size)
     }
 }
 
-void CsvUtils::interpretMaster(const Teams_t& teams,
-                               Players_t& players,
+void CsvUtils::interpretMaster(const std::unordered_map<i32, i16>& teams,
+                               std::unordered_map<u32, Player_t>& players,
                                const char* buffer,
                                size_t size)
 {
@@ -240,7 +246,9 @@ void CsvUtils::interpretMaster(const Teams_t& teams,
     }
 }
 
-void CsvUtils::interpretRatings(Players_t& players, const char* buffer, size_t size)
+void CsvUtils::interpretRatings(std::unordered_map<u32, Player_t>& players,
+                                const char* buffer,
+                                size_t size)
 {
     // TODO: avoid vector or at least reserve place
     // TODO: avoid creating a copy of a lines
@@ -268,7 +276,9 @@ void CsvUtils::interpretRatings(Players_t& players, const char* buffer, size_t s
     }
 }
 
-void CsvUtils::interpretStats(Players_t& players, const char* buffer, size_t size)
+void CsvUtils::interpretStats(std::unordered_map<u32, Player_t>& players,
+                              const char* buffer,
+                              size_t size)
 {
     // TODO: avoid vector or at least reserve place
     // TODO: avoid creating a copy of a lines

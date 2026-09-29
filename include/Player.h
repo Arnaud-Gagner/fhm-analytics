@@ -27,6 +27,8 @@ struct Info_t {
     char firstName[32] = {};
     char lastName[32] = {};
     char birthDate[32] = {};
+    char nationality[32] = {};
+    char secondNationality[32] = {};
 };
 
 struct Stats_t {
@@ -95,9 +97,6 @@ struct Player_t {
     Stats_t stat{};
     CalcStats_t calc{};
 };
-
-using Players_t = std::unordered_map<u32, Player_t>;
-using Teams_t = std::unordered_map<i32, i16>;
 
 namespace Player
 {

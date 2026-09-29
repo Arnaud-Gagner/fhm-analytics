@@ -47,7 +47,7 @@ wxPlayerGrid::wxPlayerGrid(wxWindow* parent)
     SetSizerAndFit(mainSizer);
 }
 
-void wxPlayerGrid::setPlayers(const Players_t& players)
+void wxPlayerGrid::setPlayers(const std::unordered_map<u32, Player_t>& players)
 {
     mTable->BeginBatch();
 

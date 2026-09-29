@@ -13,7 +13,7 @@ public:
     wxPlayerGrid(wxWindow* parent = nullptr);
     ~wxPlayerGrid() = default;
 
-    void setPlayers(const Players_t& players);
+    void setPlayers(const std::unordered_map<u32, Player_t>& players);
 
 private:
     wxGrid* mTable;

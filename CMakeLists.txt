@@ -12,6 +12,8 @@ endif()
 set (SOURCES
     src/AppConfig.cpp
     src/CsvUtils.cpp
+    src/FhmAnalytics.cpp
+    src/FilterConfig.cpp
     src/main.cpp
     src/Player.cpp
     src/wxAppConfig.cpp

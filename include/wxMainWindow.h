@@ -14,7 +14,7 @@ public:
     wxMainWindow();
     ~wxMainWindow() = default;
 
-    void setPlayers(const Players_t& players);
+    void setPlayers(const std::unordered_map<u32, Player_t>& players);
 
 private:
     void askNewFolderPath();
