@@ -22,8 +22,7 @@ namespace
 void AppConfig::load()
 {
     std::unique_lock<std::mutex> lock(Locker);
-    std::ifstream file(FILE_NAME);
-    toml::ParseResult tomlResult = toml::parse(file);
+    toml::ParseResult tomlResult = toml::parseFile(FILE_NAME);
 
     if (!tomlResult.valid()) {
         TERMINATE("Failed to read config file.");
