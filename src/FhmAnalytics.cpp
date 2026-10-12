@@ -38,6 +38,7 @@ void FhmAnalytics::loadGameFiles()
 
     CsvUtils::load(teamFile.c_str(), &teamBuffer, teamSize);
     CsvUtils::interpretTeam(teams, teamBuffer, teamSize);
+    free(teamBuffer);
 
     // [AG] get players info
     char* masterBuffer = nullptr;
@@ -46,6 +47,7 @@ void FhmAnalytics::loadGameFiles()
 
     CsvUtils::load(masterFile.c_str(), &masterBuffer, masterSize);
     CsvUtils::interpretMaster(teams, UnfilteredPlayers, masterBuffer, masterSize);
+    free(masterBuffer);
 
     // [AG] get players positions
     char* ratingsBuffer = nullptr;
@@ -54,6 +56,7 @@ void FhmAnalytics::loadGameFiles()
 
     CsvUtils::load(ratingsFile.c_str(), &ratingsBuffer, ratingsSize);
     CsvUtils::interpretRatings(UnfilteredPlayers, ratingsBuffer, ratingsSize);
+    free(ratingsBuffer);
 
     // [AG] get players stats
     char* statsBuffer = nullptr;
@@ -63,6 +66,7 @@ void FhmAnalytics::loadGameFiles()
 
     CsvUtils::load(statsFile.c_str(), &statsBuffer, statsSize);
     CsvUtils::interpretStats(UnfilteredPlayers, statsBuffer, statsSize);
+    free(statsBuffer);
 
     applyFilter();
 }
@@ -70,6 +74,8 @@ void FhmAnalytics::loadGameFiles()
 void FhmAnalytics::applyFilter()
 {
     std::unique_lock<std::mutex> lock(FilteredMutex);
+    const Filter_t filter = FilterConfig::activeFilter();
+
     FilteredPlayers = {};
     for (auto& [id, player] : UnfilteredPlayers) {
         if (player.info.teamId == 0
