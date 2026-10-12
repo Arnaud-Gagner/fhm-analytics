@@ -19,7 +19,7 @@ wxPlayerGrid::wxPlayerGrid(wxWindow* parent)
 {
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
-    mTable->CreateGrid(0, 19);
+    mTable->CreateGrid(0, 20);
 
     mTable->SetRowLabelSize(0);
     mTable->SetColLabelValue(0, "Name");
@@ -37,10 +37,11 @@ wxPlayerGrid::wxPlayerGrid(wxWindow* parent)
     mTable->SetColLabelValue(12, "S%");
     mTable->SetColLabelValue(13, "Hit60");
     mTable->SetColLabelValue(14, "SB60");
-    mTable->SetColLabelValue(15, "TkRel60");
+    mTable->SetColLabelValue(15, "TkDiff60");
     mTable->SetColLabelValue(16, "SF60");
-    mTable->SetColLabelValue(17, "SA60");
-    mTable->SetColLabelValue(18, "CFRel%");
+    mTable->SetColLabelValue(17, "SFDiff60");
+    mTable->SetColLabelValue(18, "GFDiff60");
+    mTable->SetColLabelValue(19, "CFRel%");
 
     mainSizer->Add(mTable, 1, wxEXPAND);
 
@@ -79,10 +80,11 @@ void wxPlayerGrid::setPlayers(const std::vector<Player_t>& players)
         mTable->SetCellValue(row, 12, wxString::Format("%.2f", calc.shotPer));
         mTable->SetCellValue(row, 13, wxString::Format("%.2f", calc.hit60));
         mTable->SetCellValue(row, 14, wxString::Format("%.2f", calc.sb60));
-        mTable->SetCellValue(row, 15, wxString::Format("%.2f", calc.tkRel60));
+        mTable->SetCellValue(row, 15, wxString::Format("%.2f", calc.tkDiff60));
         mTable->SetCellValue(row, 16, wxString::Format("%.2f", stat.sf60));
-        mTable->SetCellValue(row, 17, wxString::Format("%.2f", stat.sa60));
-        mTable->SetCellValue(row, 18, wxString::Format("%.2f", stat.cfRel));
+        mTable->SetCellValue(row, 17, wxString::Format("%.2f", calc.sfDiff60));
+        mTable->SetCellValue(row, 18, wxString::Format("%.2f", calc.gfDiff60));
+        mTable->SetCellValue(row, 19, wxString::Format("%.2f", stat.cfRel));
         ++row;
     }
     mTable->EndBatch();

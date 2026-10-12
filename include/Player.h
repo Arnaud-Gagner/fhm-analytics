@@ -69,7 +69,7 @@ struct CalcStats_t {
     u16 pt = 0;
     u16 ppPt = 0;
     u16 shPt = 0;
-    i16 tkRel = 0;
+    i16 tkDiff = 0;
     float shotPer = 0.0f;
     u16 evGoal = 0;
     u16 evAssist = 0;
@@ -88,7 +88,9 @@ struct CalcStats_t {
     float shot60 = 0.0f;
     float hit60 = 0.0f;
     float sb60 = 0.0f;
-    float tkRel60 = 0.0f;
+    float tkDiff60 = 0.0f;
+    float sfDiff60 = 0.0f;
+    float gfDiff60 = 0.0f;
 };
 
 struct Player_t {
