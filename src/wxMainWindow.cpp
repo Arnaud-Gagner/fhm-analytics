@@ -22,7 +22,7 @@ wxMainWindow::wxMainWindow()
     SetMenuBar(menuBar);
 
     wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
-    mainSizer->Add(mPlayerGrid, 1, wxEXPAND | wxALL, 10);
+    mainSizer->Add(mPlayerGrid, 1, wxEXPAND);
     SetSizer(mainSizer);
 
     Bind(
