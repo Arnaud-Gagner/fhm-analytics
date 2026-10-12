@@ -69,11 +69,16 @@ void FhmAnalytics::loadGameFiles()
 
 void FhmAnalytics::applyFilter()
 {
-    const Filter_t filter = FilterConfig::filter();
-
     std::unique_lock<std::mutex> lock(FilteredMutex);
     FilteredPlayers = {};
-    // TODO: gros filtrage
+    for (auto& [id, player] : UnfilteredPlayers) {
+        if (player.info.teamId == 0
+            && (player.position.lw > 15 || player.position.rw > 15
+                || player.position.c > 15)) {
+            Player::calcStats(player);
+            FilteredPlayers.push_back(player);
+        }
+    }
 }
 
 const std::vector<Player_t>& FhmAnalytics::filteredPlayers()
