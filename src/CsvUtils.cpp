@@ -186,8 +186,7 @@ void CsvUtils::interpretTeam(std::unordered_map<i32, i16>& teams,
                              const char* buffer,
                              size_t size)
 {
-    // TODO: avoid vector or at least reserve place
-    // TODO: avoid creating a copy of a lines
+    // TODO: avoid creating a copy of a line
     teams.insert_or_assign(-1, -1);
     size_t bufferIndex = strchr(buffer, '\n') - buffer;
 
@@ -218,8 +217,7 @@ void CsvUtils::interpretMaster(const std::unordered_map<i32, i16>& teams,
                                const char* buffer,
                                size_t size)
 {
-    // TODO: avoid vector or at least reserve place
-    // TODO: avoid creating a copy of a lines
+    // TODO: avoid creating a copy of a line
     size_t bufferIndex = strchr(buffer, '\n') - buffer;
 
     bool isFileFinished = false;
@@ -250,8 +248,7 @@ void CsvUtils::interpretRatings(std::unordered_map<u32, Player_t>& players,
                                 const char* buffer,
                                 size_t size)
 {
-    // TODO: avoid vector or at least reserve place
-    // TODO: avoid creating a copy of a lines
+    // TODO: avoid creating a copy of a line
     size_t bufferIndex = strchr(buffer, '\n') - buffer;
 
     bool isFileFinished = false;
@@ -280,8 +277,7 @@ void CsvUtils::interpretStats(std::unordered_map<u32, Player_t>& players,
                               const char* buffer,
                               size_t size)
 {
-    // TODO: avoid vector or at least reserve place
-    // TODO: avoid creating a copy of a lines
+    // TODO: avoid creating a copy of a line
     size_t bufferIndex = strchr(buffer, '\n') - buffer;
 
     bool isFileFinished = false;
