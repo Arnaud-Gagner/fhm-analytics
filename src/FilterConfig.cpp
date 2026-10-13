@@ -105,16 +105,13 @@ namespace
 
     void updateFilterIndexFromName(char* name)
     {
-        bool wasFound = false;
         for (u32 i = 0; i < Filters.count; ++i) {
-            if (memcmp(Filters.items[i].name, name, 64)) {
+            if (strcmp(Filters.items[i].name, name) == 0) {
                 ActiveFilterIndex = i;
-                wasFound = true;
+                return;
             }
         }
-        if (!wasFound) {
-            WARN("Couldn't find the active filter in the filters");
-        }
+        WARN("Couldn't find the active filter in the filters");
     }
 
     void parseBuffer(Buffer_t* buffer)
