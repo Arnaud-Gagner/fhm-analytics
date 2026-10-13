@@ -9,9 +9,9 @@
 // [AG] when attribute has [2] => idx 0: min, idx 1: max
 struct Filter_t {
     char name[64];
-    u8 minAge[2] = { 0, 100 };
+    u8 age[2] = { 0, 100 };
     i32 teamId = -2;
-    std::vector<i16> leagueIds = {};
+    i16 leagueIds[256] = {};
     Position_t postions{};
     Stats_t baseStats[2] = {};
     CalcStats_t brewStats[2] = {};
