@@ -24,6 +24,9 @@ namespace CsvUtils
     void interpretStats(std::unordered_map<u32, Player_t>& players,
                         const char* buffer,
                         size_t size);
+    void updatePlayerTeam(std::unordered_map<u32, Player_t>& players,
+                          const char* buffer,
+                          size_t size);
 };
 
 #endif // !CSV_UTILS_H

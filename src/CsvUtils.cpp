@@ -57,10 +57,10 @@ namespace
         player.info.teamId = atoi(fields[1]);
         strncpy(player.info.firstName, fields[3], sizeof(player.info.firstName) - 1);
         strncpy(player.info.lastName, fields[4], sizeof(player.info.lastName) - 1);
-        strncpy(player.info.birthDate, fields[11], sizeof(player.info.birthDate) - 1);
-        strncpy(player.info.nationality, fields[12], sizeof(player.info.nationality) - 1);
+        strncpy(player.info.birthDate, fields[8], sizeof(player.info.birthDate) - 1);
+        strncpy(player.info.nationality, fields[11], sizeof(player.info.nationality) - 1);
         strncpy(player.info.secondNationality,
-                fields[8],
+                fields[12],
                 sizeof(player.info.secondNationality) - 1);
     }
 
@@ -295,6 +295,33 @@ void CsvUtils::interpretStats(std::unordered_map<u32, Player_t>& players,
         char* fields[41] = {};
         if (statsLine(line, fields)) {
             deserializeStats(players[std::atoi(fields[0])], fields);
+        }
+        bufferIndex = ptrPosition - buffer;
+        isFileFinished = bufferIndex + 1 >= size;
+    }
+}
+
+void CsvUtils::updatePlayerTeam(std::unordered_map<u32, Player_t>& players,
+                                const char* buffer,
+                                size_t size)
+{
+    size_t bufferIndex = strchr(buffer, '\n') - buffer;
+
+    bool isFileFinished = false;
+    while (!isFileFinished) {
+        char line[512] = {};
+
+        const char* ptrPosition = strchr(buffer + bufferIndex, '\n') + 1;
+        const char* ptrEndl = strchr(ptrPosition, '\n');
+        if (!ptrEndl) {
+            return;
+        }
+        std::memcpy(&line, ptrPosition, ptrEndl - ptrPosition + 1);
+        line[511] = '\0';
+
+        char* fields[58] = {};
+        if (infoLine(line, fields)) {
+            players[atoi(fields[0])].info.teamId = atoi(fields[1]);
         }
         bufferIndex = ptrPosition - buffer;
         isFileFinished = bufferIndex + 1 >= size;
