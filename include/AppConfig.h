@@ -6,6 +6,7 @@
 
 struct AppConfig_t {
     std::string folderPath = "";
+    std::string freeAgentsPath = "";
     char csvSeparator = ';';
     int positionThreshold = 15;
 };

@@ -1,3 +1,4 @@
 folder_path = ""
+free_agents_path = ""
 csv_separator = ";"
-position_threshold = 15
+position_threshold = 18

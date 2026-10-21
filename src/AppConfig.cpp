@@ -15,6 +15,7 @@ namespace
     const char* FILE_NAME = "configs/general.toml";
 
     const char* FOLDER_PATH_KEY = "folder_path";
+    const char* FA_PATH_KEY = "free_agents_path";
     const char* CSV_SEPARATOR_KEY = "csv_separator";
     const char* POSITION_THRESHOLD_KEY = "position_threshold";
 }
@@ -34,6 +35,12 @@ void AppConfig::load()
         TERMINATE("Path configuration is not in string format. Please fix that.")
     }
     Config.folderPath = pathToml->as<std::string>();
+
+    const toml::Value* faPathToml = tomlValue.find(FA_PATH_KEY);
+    if (!faPathToml || !faPathToml->is<std::string>()) {
+        TERMINATE("Path configuration is not in string format. Please fix that.")
+    }
+    Config.freeAgentsPath = faPathToml->as<std::string>();
 
     const toml::Value* separatorToml = tomlValue.find(CSV_SEPARATOR_KEY);
     if (!separatorToml || !separatorToml->is<std::string>()) {
@@ -57,6 +64,7 @@ void AppConfig::save()
 
     std::fstream file(FILE_NAME);
     file << FOLDER_PATH_KEY << " = \"" << Config.folderPath << "\"\n";
+    file << FA_PATH_KEY << " = \"" << Config.freeAgentsPath << "\"\n";
     file << CSV_SEPARATOR_KEY << " = \"" << Config.csvSeparator << "\"\n";
     file << POSITION_THRESHOLD_KEY << " = " << Config.positionThreshold << '\n';
 }
