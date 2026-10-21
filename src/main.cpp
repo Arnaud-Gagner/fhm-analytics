@@ -21,6 +21,7 @@ int main(int argc, char** argv)
 bool wxFhmAnalytics::OnInit()
 {
     FhmAnalytics::init();
+    SetAppearance(wxAppBase::Appearance::System);
 
     wxMainWindow* mainWindow = new wxMainWindow();
     mainWindow->Show();
