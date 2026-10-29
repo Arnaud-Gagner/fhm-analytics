@@ -60,9 +60,21 @@ void Player::calcStats(Player_t& player)
     player.calc.shot60 = per60(player.stat.shot, player.calc.totalToi);
     player.calc.hit60 = per60(player.stat.hit, player.calc.totalToi);
     player.calc.sb60 = per60(player.stat.sb, player.calc.totalToi);
+    player.calc.cf60 = per60(player.stat.cf, player.calc.totalToi);
+    player.calc.ca60 = per60(player.stat.ca, player.calc.totalToi);
+
     player.calc.tkDiff60 = per60(player.calc.tkDiff, player.calc.totalToi);
     player.calc.sfDiff60
       = per60(player.stat.sf60 - player.stat.sa60, player.calc.totalToi);
+    player.calc.cfDiff60
+      = per60(player.calc.cf60 - player.calc.ca60, player.calc.totalToi);
     player.calc.gfDiff60
       = per60(player.stat.gf60 - player.stat.ga60, player.calc.totalToi);
+
+    float gf = player.stat.gf60 / 3600 * static_cast<float>(player.stat.toi);
+    if (gf <= 0.0f) {
+        return;
+    }
+    player.calc.ipp
+      = static_cast<float>(player.calc.pt) / static_cast<float>(player.calc.pt + gf);
 }

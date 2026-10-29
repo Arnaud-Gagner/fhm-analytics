@@ -56,8 +56,8 @@ struct Stats_t {
     float ga60 = 0.0f;
     float sf60 = 0.0f;
     float sa60 = 0.0f;
-    u8 cf = 0;
-    u8 ca = 0;
+    u16 cf = 0;
+    u16 ca = 0;
     float cfPer = 0.0f;
     float cfRel = 0.0f;
     u16 gwg = 0;
@@ -88,9 +88,13 @@ struct CalcStats_t {
     float shot60 = 0.0f;
     float hit60 = 0.0f;
     float sb60 = 0.0f;
+    float cf60 = 0.0f;
+    float ca60 = 0.0f;
     float tkDiff60 = 0.0f;
     float sfDiff60 = 0.0f;
+    float cfDiff60 = 0.0f;
     float gfDiff60 = 0.0f;
+    float ipp = 0.0f;
 };
 
 struct Player_t {

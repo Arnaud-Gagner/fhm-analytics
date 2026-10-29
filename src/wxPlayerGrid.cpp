@@ -19,7 +19,7 @@ wxPlayerGrid::wxPlayerGrid(wxWindow* parent)
 {
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
-    mTable->CreateGrid(0, 20);
+    mTable->CreateGrid(0, 22);
 
     mTable->SetRowLabelSize(0);
     mTable->SetColLabelValue(0, "Name");
@@ -42,6 +42,8 @@ wxPlayerGrid::wxPlayerGrid(wxWindow* parent)
     mTable->SetColLabelValue(17, "SFDiff60");
     mTable->SetColLabelValue(18, "GFDiff60");
     mTable->SetColLabelValue(19, "CFRel%");
+    mTable->SetColLabelValue(20, "CFDiff60");
+    mTable->SetColLabelValue(21, "IPP");
 
     mainSizer->Add(mTable, 1, wxEXPAND);
 
@@ -84,7 +86,9 @@ void wxPlayerGrid::setPlayers(const std::vector<Player_t>& players)
         mTable->SetCellValue(row, 16, wxString::Format("%.2f", stat.sf60));
         mTable->SetCellValue(row, 17, wxString::Format("%.2f", calc.sfDiff60));
         mTable->SetCellValue(row, 18, wxString::Format("%.2f", calc.gfDiff60));
-        mTable->SetCellValue(row, 19, wxString::Format("%.2f", stat.cfRel));
+        mTable->SetCellValue(row, 19, wxString::Format("%.2f", calc.cfDiff60));
+        mTable->SetCellValue(row, 20, wxString::Format("%.2f", stat.cfRel));
+        mTable->SetCellValue(row, 21, wxString::Format("%.2f", calc.ipp));
         ++row;
     }
     mTable->EndBatch();
