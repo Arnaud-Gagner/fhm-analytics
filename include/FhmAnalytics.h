@@ -9,6 +9,8 @@ namespace FhmAnalytics
     void loadGameFiles();
     void applyFilter();
 
+    void freeAgents();
+
     const std::vector<Player_t>& filteredPlayers();
 }
 

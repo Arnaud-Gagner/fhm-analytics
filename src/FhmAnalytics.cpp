@@ -76,15 +76,24 @@ void FhmAnalytics::applyFilter()
     std::unique_lock<std::mutex> lock(FilteredMutex);
     const Filter_t filter = FilterConfig::activeFilter();
 
+    freeAgents();
+
     FilteredPlayers = {};
     for (auto& [id, player] : UnfilteredPlayers) {
-        if (player.info.teamId == 0
-            && (player.position.lw > 15 || player.position.rw > 15
-                || player.position.c > 15)) {
-            Player::calcStats(player);
-            FilteredPlayers.push_back(player);
-        }
+        Player::calcStats(player);
+        FilteredPlayers.push_back(player);
     }
+}
+
+void FhmAnalytics::freeAgents()
+{
+    char* masterBuffer = nullptr;
+    size_t masterSize = 0;
+    std::string masterFile = AppConfig::settings().freeAgentsPath + "/player_master.csv";
+
+    CsvUtils::load(masterFile.c_str(), &masterBuffer, masterSize);
+    CsvUtils::updatePlayerTeam(UnfilteredPlayers, masterBuffer, masterSize);
+    free(masterBuffer);
 }
 
 const std::vector<Player_t>& FhmAnalytics::filteredPlayers()
