@@ -89,7 +89,8 @@ namespace
     Buffer_t takeFilter(Buffer_t* buffer)
     {
         Buffer_t filterBuffer = Buffer_t{ buffer->data, 0 };
-        u32 currentLineSize = findNextLineIndex(buffer);
+        // TODO: find filter name line and start filling filterBuffer
+        // TODO: find first empty line and (so the filter buffer size)
         return filterBuffer;
     }
 
@@ -111,7 +112,8 @@ namespace
                 return;
             }
         }
-        WARN("Couldn't find the active filter in the filters");
+        // TODO: add back
+        // WARN("Couldn't find the active filter in the filters");
     }
 
     void parseBuffer(Buffer_t* buffer)
@@ -141,6 +143,7 @@ void FilterConfig::load()
     }
     long fileSize = ftell(file);
     if (fileSize < 0) {
+        fclose(file);
         TERMINATE("Failed to determine filter file size");
     }
     rewind(file);
@@ -148,8 +151,11 @@ void FilterConfig::load()
     u32 size = static_cast<u32>(fileSize);
     char* buffer = static_cast<char*>(malloc(size + 1));
     if (fread(buffer, 1, size, file) < size) {
+        fclose(file);
         TERMINATE("Failed to read filter file.");
     }
+    fclose(file);
+
     Buffer_t fileBuffer = Buffer_t{ buffer, size };
     fileBuffer.data[fileBuffer.size] = '\0';
     parseBuffer(&fileBuffer);

@@ -8,12 +8,14 @@
 wxAppConfig::wxAppConfig(wxWindow* parent)
   : wxDialog(parent, wxID_ANY, "App Configuration")
   , mFolderPath{ new wxTextCtrl(this, wxID_ANY, "") }
+  , mFreeAgentsPath{ new wxTextCtrl(this, wxID_ANY, "") }
   , mCsvSeparator{ new wxTextCtrl(this, wxID_ANY, "") }
   , mPositionThreshold{ new wxTextCtrl(this, wxID_ANY, "") }
   , mApply{ new wxButton(this, wxID_ANY, "Apply") }
 {
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
     wxUtils::labelWidget(mainSizer, mFolderPath, "Save Folder:");
+    wxUtils::labelWidget(mainSizer, mFreeAgentsPath, "Free Agents Folder:");
     wxUtils::labelWidget(mainSizer, mCsvSeparator, "CSV Separator:");
     wxUtils::labelWidget(mainSizer, mPositionThreshold, "Position Threshold:");
     mainSizer->Add(mApply, wxEXPAND | wxALL, 5);
@@ -29,6 +31,7 @@ wxAppConfig::wxAppConfig(wxWindow* parent)
 void wxAppConfig::setConfig(const AppConfig_t& config)
 {
     mFolderPath->SetValue(config.folderPath);
+    mFreeAgentsPath->SetValue(config.freeAgentsPath);
     mCsvSeparator->SetValue(config.csvSeparator);
     mPositionThreshold->SetValue(std::to_string(config.positionThreshold));
 }
@@ -38,6 +41,7 @@ void wxAppConfig::apply()
     AppConfig_t config{};
 
     config.folderPath = mFolderPath->GetValue().ToStdString();
+    config.freeAgentsPath = mFreeAgentsPath->GetValue().ToStdString();
 
     std::string csvSeparator = mCsvSeparator->GetValue().ToStdString();
     if (csvSeparator.size() > 1) {

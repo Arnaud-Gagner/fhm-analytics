@@ -6,10 +6,11 @@
 namespace FhmAnalytics
 {
     void init();
-    void loadGameFiles();
-    void applyFilter();
 
-    void freeAgents();
+    void loadGameFiles();
+    void loadTeams(bool isFA);
+
+    void applyFilter();
 
     const std::vector<Player_t>& filteredPlayers();
 }

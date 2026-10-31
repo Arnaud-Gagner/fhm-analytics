@@ -20,6 +20,7 @@ private:
 
 private:
     wxTextCtrl* mFolderPath;
+    wxTextCtrl* mFreeAgentsPath;
     wxTextCtrl* mCsvSeparator;
     wxTextCtrl* mPositionThreshold;
 

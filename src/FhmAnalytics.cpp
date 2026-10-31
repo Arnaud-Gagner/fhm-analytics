@@ -15,6 +15,21 @@ namespace
 
     std::vector<Player_t> FilteredPlayers = {};
     std::mutex FilteredMutex;
+
+    void reloadTeams(bool isFreeAgents)
+    {
+        char* masterBuffer = nullptr;
+        size_t masterSize = 0;
+
+        std::string masterFile;
+        isFreeAgents ? masterFile = AppConfig::settings().freeAgentsPath
+                     : masterFile = AppConfig::settings().folderPath;
+        masterFile += "/player_master.csv";
+
+        CsvUtils::load(masterFile.c_str(), &masterBuffer, masterSize);
+        CsvUtils::updatePlayerTeam(UnfilteredPlayers, masterBuffer, masterSize);
+        free(masterBuffer);
+    }
 }
 
 void FhmAnalytics::init()
@@ -71,29 +86,24 @@ void FhmAnalytics::loadGameFiles()
     applyFilter();
 }
 
+void FhmAnalytics::loadTeams(bool isFA)
+{
+    reloadTeams(isFA);
+    applyFilter();
+}
+
 void FhmAnalytics::applyFilter()
 {
     std::unique_lock<std::mutex> lock(FilteredMutex);
     const Filter_t filter = FilterConfig::activeFilter();
 
-    freeAgents();
-
     FilteredPlayers = {};
     for (auto& [id, player] : UnfilteredPlayers) {
-        Player::calcStats(player);
-        FilteredPlayers.push_back(player);
+        if (player.info.leagueId == 0) {
+            Player::calcStats(player);
+            FilteredPlayers.push_back(player);
+        }
     }
-}
-
-void FhmAnalytics::freeAgents()
-{
-    char* masterBuffer = nullptr;
-    size_t masterSize = 0;
-    std::string masterFile = AppConfig::settings().freeAgentsPath + "/player_master.csv";
-
-    CsvUtils::load(masterFile.c_str(), &masterBuffer, masterSize);
-    CsvUtils::updatePlayerTeam(UnfilteredPlayers, masterBuffer, masterSize);
-    free(masterBuffer);
 }
 
 const std::vector<Player_t>& FhmAnalytics::filteredPlayers()
