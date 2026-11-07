@@ -1,6 +1,8 @@
 #ifndef FHM_ANALYTICS_H
 #define FHM_ANALYTICS_H
 
+#include <vector>
+
 #include "Player.h"
 
 namespace FhmAnalytics
