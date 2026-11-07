@@ -57,9 +57,25 @@ namespace
                  &filter->postions.rw);
     }
 
-    void parseLeagues(Filter_t* filter, Buffer_t* line) {}
+    void parseTeam(Filter_t* filter, Buffer_t* line)
+    {
+        sscanf_s(line->data, "team %u", &filter->teamId);
+    }
 
-    void parseStats(Filter_t* filter, Buffer_t* line) {}
+    void parseLeagues(Filter_t* filter, Buffer_t* line)
+    {
+        // TODO
+    }
+
+    void parseNation(Filter_t* filter, Buffer_t* line)
+    {
+        sscanf_s(line->data, "nation %u", &filter->nationailty);
+    }
+
+    void parseStats(Filter_t* filter, Buffer_t* line)
+    {
+        // TODO
+    }
 
     struct ParserDefinition_t {
         const char* keyName;
@@ -69,7 +85,9 @@ namespace
     constexpr ParserDefinition_t PARSER_DEFINITIONS[] = {
         {       "age",       parseAge },
         { "positions", parsePositions },
+        {      "team",      parseTeam },
         {   "leagues",   parseLeagues },
+        {    "nation",    parseNation },
         {      "stat",     parseStats }
     };
 

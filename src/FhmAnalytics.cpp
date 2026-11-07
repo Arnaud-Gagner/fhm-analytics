@@ -6,6 +6,7 @@
 #include "AppConfig.h"
 #include "CsvUtils.h"
 #include "FilterConfig.h"
+#include "GroupStats.h"
 #include "Player.h"
 
 namespace
@@ -91,19 +92,64 @@ void FhmAnalytics::loadTeams(bool isFA)
     reloadTeams(isFA);
     applyFilter();
 }
-
+#include <iostream>
 void FhmAnalytics::applyFilter()
 {
     std::unique_lock<std::mutex> lock(FilteredMutex);
     const Filter_t filter = FilterConfig::activeFilter();
 
-    FilteredPlayers = {};
+    GroupStats_t attack{};
+    GroupStats_t defense{};
     for (auto& [id, player] : UnfilteredPlayers) {
-        if (player.info.leagueId == 0) {
+        if (player.info.leagueId == 0 && player.stat.gp >= 15
+            && (player.position.c == 20 || player.position.lw == 20
+                || player.position.rw == 20)) {
             Player::calcStats(player);
-            FilteredPlayers.push_back(player);
+            attack.players.push_back(&player);
+        }
+        if (player.info.leagueId == 0 && player.stat.gp >= 15
+            && (player.position.ld == 20 || player.position.rd == 20)) {
+            Player::calcStats(player);
+            defense.players.push_back(&player);
         }
     }
+    GroupStats::loadPercentiles(attack);
+    GroupStats::loadPercentiles(defense);
+
+    FilteredPlayers = {};
+    for (Player_t* player : attack.players) {
+        Player::indexes(player);
+    }
+    for (Player_t* player : defense.players) {
+        Player::indexes(player);
+    }
+    GroupStats::loadIndexPercentiles(attack);
+    GroupStats::loadIndexPercentiles(defense);
+
+    for (Player_t* player : attack.players) {
+        if (player->percentile.nShot60 >= 90.0) {
+            FilteredPlayers.push_back(*player);
+        }
+    }
+    // for (Player_t* player : defense.players) {
+    //     if (player->index.defensePct > 90.0) {
+    //         FilteredPlayers.push_back(*player);
+    //     }
+    // }
+
+    // for (Player_t* player : attack.players) {
+    //     Player::indexes(player);
+    //     if (player->index.defense > 0.6) {
+    //         FilteredPlayers.push_back(*player);
+    //     }
+    // }
+    // for (Player_t* player : defense.players) {
+    //     Player::indexes(player);
+    //     if (player->index.defense > 0.6) {
+    //         FilteredPlayers.push_back(*player);
+    //     }
+    // }
+    // TODO: callback to GUI
 }
 
 const std::vector<Player_t>& FhmAnalytics::filteredPlayers()

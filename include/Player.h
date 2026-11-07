@@ -2,7 +2,6 @@
 #define PLAYER_H
 
 #include <cstdint>
-#include <unordered_map>
 
 using i16 = int16_t;
 using i32 = int32_t;
@@ -75,10 +74,12 @@ struct CalcStats_t {
     u16 evAssist = 0;
     u16 evPt = 0;
     u32 totalToi = 0;
-    float atoi = 0;
-    float aevtoi = 0;
-    float apptoi = 0;
-    float ashtoi = 0;
+    float atoi = 0.0f;
+    float aevtoi = 0.0f;
+    float apptoi = 0.0f;
+    float ashtoi = 0.0f;
+    float ppPct = 0.0f;
+    float shPct = 0.0f;
     float goal60 = 0.0f;
     float assist60 = 0.0f;
     float pt60 = 0.0f;
@@ -88,13 +89,90 @@ struct CalcStats_t {
     float shot60 = 0.0f;
     float hit60 = 0.0f;
     float sb60 = 0.0f;
+    float tka60 = 0.0f;
+    float gva60 = 0.0f;
     float cf60 = 0.0f;
     float ca60 = 0.0f;
-    float tkDiff60 = 0.0f;
+    float tkaDiff60 = 0.0f;
     float sfDiff60 = 0.0f;
     float cfDiff60 = 0.0f;
     float gfDiff60 = 0.0f;
+    float minor60 = 0.0f;
+    float nShot60 = 0.0f;
+    float nSf60 = 0.0f;
+    float nSa60 = 0.0f;
+    float nGf60 = 0.0f;
+    float nGa60 = 0.0f;
     float ipp = 0.0f;
+};
+
+struct Percentiles_t {
+    float goal = 0.0f;
+    float assist = 0.0f;
+    float plusMinus = 0.0f;
+    float pim = 0.0f;
+    float ppg = 0.0f;
+    float ppa = 0.0f;
+    float shg = 0.0f;
+    float sha = 0.0f;
+    float fight = 0.0f;
+    float fightWon = 0.0f;
+    float hit = 0.0f;
+    float gva = 0.0f;
+    float tka = 0.0f;
+    float sb = 0.0f;
+    float shot = 0.0f;
+    float pdo = 0.0f;
+    float gf60 = 0.0f;
+    float ga60 = 0.0f;
+    float sf60 = 0.0f;
+    float sa60 = 0.0f;
+    float cf = 0.0f;
+    float ca = 0.0f;
+    float cfPer = 0.0f;
+    float cfRel = 0.0f;
+    float gwg = 0.0f;
+    float fo = 0.0f;
+    float fow = 0.0f;
+    float pt = 0.0f;
+    float ppPt = 0.0f;
+    float shPt = 0.0f;
+    float tkDiff = 0.0f;
+    float shotPer = 0.0f;
+    float evGoal = 0.0f;
+    float evAssist = 0.0f;
+    float evPt = 0.0f;
+    float goal60 = 0.0f;
+    float assist60 = 0.0f;
+    float pt60 = 0.0f;
+    float evGoal60 = 0.0f;
+    float evAssist60 = 0.0f;
+    float evPt60 = 0.0f;
+    float shot60 = 0.0f;
+    float minor60 = 0.0f;
+    float hit60 = 0.0f;
+    float sb60 = 0.0f;
+    float tka60 = 0.0f;
+    float gva60 = 0.0f;
+    float cf60 = 0.0f;
+    float ca60 = 0.0f;
+    float tkaDiff60 = 0.0f;
+    float sfDiff60 = 0.0f;
+    float cfDiff60 = 0.0f;
+    float gfDiff60 = 0.0f;
+    float nShot60 = 0.0f;
+    float nSf60 = 0.0f;
+    float nSa60 = 0.0f;
+    float nGf60 = 0.0f;
+    float nGa60 = 0.0f;
+    float ipp = 0.0f;
+    float attackIndex = 0.0f;
+    float defenseIndex = 0.0f;
+};
+
+struct Index_t {
+    float attack = 0.0f;
+    float defense = 0.0f;
 };
 
 struct Player_t {
@@ -102,11 +180,14 @@ struct Player_t {
     Position_t position{};
     Stats_t stat{};
     CalcStats_t calc{};
+    Percentiles_t percentile{};
+    Index_t index{};
 };
 
 namespace Player
 {
     void calcStats(Player_t& player);
+    void indexes(Player_t* player);
 }
 
 #endif // !PLAYER_H

@@ -19,7 +19,7 @@ wxPlayerGrid::wxPlayerGrid(wxWindow* parent)
 {
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
-    mTable->CreateGrid(0, 22);
+    mTable->CreateGrid(0, 24);
 
     mTable->SetRowLabelSize(0);
     mTable->SetColLabelValue(0, "Name");
@@ -37,17 +37,21 @@ wxPlayerGrid::wxPlayerGrid(wxWindow* parent)
     mTable->SetColLabelValue(12, "S%");
     mTable->SetColLabelValue(13, "Hit60");
     mTable->SetColLabelValue(14, "SB60");
-    mTable->SetColLabelValue(15, "TkDiff60");
+    mTable->SetColLabelValue(15, "tkaDiff60");
     mTable->SetColLabelValue(16, "SF60");
     mTable->SetColLabelValue(17, "SFDiff60");
     mTable->SetColLabelValue(18, "GFDiff60");
     mTable->SetColLabelValue(19, "CFRel%");
     mTable->SetColLabelValue(20, "CFDiff60");
     mTable->SetColLabelValue(21, "IPP");
+    mTable->SetColLabelValue(22, "ATT");
+    mTable->SetColLabelValue(23, "DEF");
 
     mainSizer->Add(mTable, 1, wxEXPAND);
 
     SetSizerAndFit(mainSizer);
+    // TODO:
+    // wxEVT_GRID_LABEL_LEFT_CLICK
 }
 
 void wxPlayerGrid::setPlayers(const std::vector<Player_t>& players)
@@ -64,6 +68,7 @@ void wxPlayerGrid::setPlayers(const std::vector<Player_t>& players)
         const Info_t& info = player.info;
         const Stats_t& stat = player.stat;
         const CalcStats_t& calc = player.calc;
+        const Percentiles_t& pct = player.percentile;
 
         const wxString name = wxString::Format("%s %s", info.firstName, info.lastName);
 
@@ -82,13 +87,15 @@ void wxPlayerGrid::setPlayers(const std::vector<Player_t>& players)
         mTable->SetCellValue(row, 12, wxString::Format("%.2f", calc.shotPer));
         mTable->SetCellValue(row, 13, wxString::Format("%.2f", calc.hit60));
         mTable->SetCellValue(row, 14, wxString::Format("%.2f", calc.sb60));
-        mTable->SetCellValue(row, 15, wxString::Format("%.2f", calc.tkDiff60));
+        mTable->SetCellValue(row, 15, wxString::Format("%.2f", calc.tkaDiff60));
         mTable->SetCellValue(row, 16, wxString::Format("%.2f", stat.sf60));
         mTable->SetCellValue(row, 17, wxString::Format("%.2f", calc.sfDiff60));
         mTable->SetCellValue(row, 18, wxString::Format("%.2f", calc.gfDiff60));
         mTable->SetCellValue(row, 19, wxString::Format("%.2f", calc.cfDiff60));
         mTable->SetCellValue(row, 20, wxString::Format("%.2f", stat.cfRel));
         mTable->SetCellValue(row, 21, wxString::Format("%.2f", calc.ipp));
+        mTable->SetCellValue(row, 22, wxString::Format("%.0f", pct.attackIndex));
+        mTable->SetCellValue(row, 23, wxString::Format("%.0f", pct.defenseIndex));
         ++row;
     }
     mTable->EndBatch();
