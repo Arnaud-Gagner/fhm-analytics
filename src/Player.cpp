@@ -112,6 +112,6 @@ void Player::indexes(Player_t* player)
 {
     const Percentiles_t& pct = player->percentile;
     player->index.defense
-      = (pct.nSa60 + pct.nGa60 + pct.sb60 + pct.tkaDiff60 + pct.minor60) / 500.0f;
-    player->index.attack = (pct.nSf60 + pct.nGf60 + pct.pt60 + pct.nShot60) / 400.0f;
+      = pct.nSa60 + pct.nGa60 + pct.sb60 + pct.tkaDiff60 + pct.minor60;
+    player->index.attack = pct.nSf60 + pct.nGf60 + pct.pt60 + pct.nShot60 + pct.ipp;
 }
