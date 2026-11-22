@@ -1,182 +1,117 @@
 #include "Player.h"
 
-#include <iomanip>
-#include <iostream>
-
-void PlayerUtils::setInfo(Player& player, const std::vector<std::string>& info)
+namespace
 {
-    player.info.playerId = std::stoi(info[0]);
-    player.info.teamId = std::stoi(info[1]);
-    player.info.franchiseId = std::stoi(info[2]);
-    player.info.firstName = info[3];
-    player.info.lastName = info[4];
-    player.info.nickName = info[5];
-    player.info.height = std::stoi(info[6]);
-    player.info.weight = std::stoi(info[7]);
-    player.info.dateBirth = info[8];
-    player.info.birthCity = info[9];
-    player.info.birthState = info[10];
-    player.info.nationality = info[11];
-}
+    float atoi(u32 time, u16 gp)
+    {
+        return static_cast<float>(time) / static_cast<float>(gp);
+    }
 
-void PlayerUtils::setPositions(Player& player, const std::vector<std::string>& positions)
-{
-    player.positions.isGoalie = std::stoi(positions[1]) > 14;
-    player.positions.isLeftDefenseman = std::stoi(positions[2]) > 14;
-    player.positions.isRightDefenseman = std::stoi(positions[3]) > 14;
-    player.positions.isLeftWinger = std::stoi(positions[4]) > 14;
-    player.positions.isCenter = std::stoi(positions[5]) > 14;
-    player.positions.isRightWinger = std::stoi(positions[6]) > 14;
-}
+    float per60(u16 stat, u32 toi)
+    {
+        return static_cast<float>(stat) / static_cast<float>(toi) * 3600.0f;
+    }
 
-void PlayerUtils::setStats(Player& player, const std::vector<std::string>& stats)
-{
-    player.info.playerId = std::stoi(stats[0]);
-    player.stats.gamesPlayed = std::stoi(stats[4]);
-    player.stats.goals = std::stoi(stats[5]);
-    player.stats.assists = std::stoi(stats[6]);
-    player.stats.penalityMin = std::stoi(stats[7]);
-    player.stats.plusminus = std::stoi(stats[8]);
-    player.stats.ppGoals = std::stoi(stats[9]);
-    player.stats.ppAssists = std::stoi(stats[10]);
-    player.stats.shGoals = std::stoi(stats[11]);
-    player.stats.shAssists = std::stoi(stats[12]);
-    player.stats.gamerating = std::stoi(stats[13]);
-    player.stats.gameWinningGoals = std::stoi(stats[14]);
-    player.stats.shots = std::stoi(stats[15]);
-    player.stats.faceoffTaken = std::stoi(stats[16]);
-    player.stats.faceoffWon = std::stoi(stats[17]);
-    player.stats.hit = std::stoi(stats[18]);
-    player.stats.giveaway = std::stoi(stats[19]);
-    player.stats.takeaway = std::stoi(stats[20]);
-    player.stats.shotblock = std::stoi(stats[21]);
-    player.stats.timeOnIce = std::stoi(stats[22]);
-    player.stats.ppTimeOnIce = std::stoi(stats[23]);
-    player.stats.shTimeOnIce = std::stoi(stats[24]);
-    player.stats.fights = std::stoi(stats[25]);
-}
+    float per60(i16 stat, u32 toi)
+    {
+        return static_cast<float>(stat) / static_cast<float>(toi) * 3600.0f;
+    }
 
-void PlayerUtils::appendStats(Player& player, const std::vector<std::string>& stats)
-{
-    player.stats.gamesPlayed += std::stoi(stats[4]);
-    player.stats.goals += std::stoi(stats[5]);
-    player.stats.assists += std::stoi(stats[6]);
-    player.stats.penalityMin += std::stoi(stats[7]);
-    player.stats.plusminus += std::stoi(stats[8]);
-    player.stats.ppGoals += std::stoi(stats[9]);
-    player.stats.ppAssists += std::stoi(stats[10]);
-    player.stats.shGoals += std::stoi(stats[11]);
-    player.stats.shAssists += std::stoi(stats[12]);
-    player.stats.gamerating += std::stoi(stats[13]);
-    player.stats.gameWinningGoals += std::stoi(stats[14]);
-    player.stats.shots += std::stoi(stats[15]);
-    player.stats.faceoffTaken += std::stoi(stats[16]);
-    player.stats.faceoffWon += std::stoi(stats[17]);
-    player.stats.hit += std::stoi(stats[18]);
-    player.stats.giveaway += std::stoi(stats[19]);
-    player.stats.takeaway += std::stoi(stats[20]);
-    player.stats.shotblock += std::stoi(stats[21]);
-    player.stats.timeOnIce += std::stoi(stats[22]);
-    player.stats.ppTimeOnIce += std::stoi(stats[23]);
-    player.stats.shTimeOnIce += std::stoi(stats[24]);
-    player.stats.fights += std::stoi(stats[25]);
-}
+    float per60(float stat, u32 toi)
+    {
+        return stat / static_cast<float>(toi) * 3600.0f;
+    }
 
-void PlayerUtils::customStats(Player& player)
-{
-    player.customs.evGoal
-      = player.stats.goals - player.stats.ppGoals - player.stats.shGoals;
-    player.customs.evAssist
-      = player.stats.assists - player.stats.ppAssists - player.stats.shAssists;
-    player.customs.points = player.stats.goals + player.stats.assists;
-    player.customs.evPoints = player.customs.evGoal + player.customs.evAssist;
-    player.customs.ppPoints = player.stats.ppAssists + player.stats.ppGoals;
-    player.customs.shPoints = player.stats.shAssists + player.stats.shGoals;
-    player.customs.takeawayRel = player.stats.takeaway - player.stats.giveaway;
-    player.customs.shotPercentage = (player.stats.shots > 0)
-                                    * (static_cast<double>(player.stats.goals)
-                                       / static_cast<double>(player.stats.shots) * 100.0);
+    float normalized(float stat, float ppPct, float shPct)
+    {
+        return stat * (1 - ppPct + shPct);
+    }
 
-    player.customs.totalToi = static_cast<double>(
-      player.stats.timeOnIce + player.stats.ppTimeOnIce + player.stats.shTimeOnIce);
-    player.customs.evAtoi = static_cast<double>(player.stats.timeOnIce)
-                            / static_cast<double>(player.stats.gamesPlayed) / 60.0;
-    player.customs.ppAtoi = static_cast<double>(player.stats.ppTimeOnIce)
-                            / static_cast<double>(player.stats.gamesPlayed) / 60.0;
-    player.customs.shAtoi = static_cast<double>(player.stats.shTimeOnIce)
-                            / static_cast<double>(player.stats.gamesPlayed) / 60.0;
-    player.customs.atoi
-      = player.customs.evAtoi + player.customs.ppAtoi + player.customs.shAtoi;
-
-    if (player.stats.timeOnIce > 0) {
-        player.customs.goal60 = static_cast<double>(player.stats.goals)
-                                / static_cast<double>(player.customs.totalToi) * 3600.0;
-        player.customs.assist60 = static_cast<double>(player.stats.assists)
-                                  / static_cast<double>(player.customs.totalToi) * 3600.0;
-        player.customs.pt60 = player.customs.goal60 + player.customs.assist60;
-        player.customs.evGoal60 = static_cast<double>(player.customs.evGoal)
-                                  / static_cast<double>(player.stats.timeOnIce) * 3600.0;
-        player.customs.evAssist60 = static_cast<double>(player.customs.evAssist)
-                                    / static_cast<double>(player.stats.timeOnIce)
-                                    * 3600.0;
-        player.customs.evPt60 = player.customs.evGoal60 + player.customs.evAssist60;
-        player.customs.ppGoal60 = static_cast<double>(player.stats.ppGoals)
-                                  / static_cast<double>(player.stats.ppTimeOnIce)
-                                  * 3600.0;
-        player.customs.ppAssist60 = static_cast<double>(player.stats.ppAssists)
-                                    / static_cast<double>(player.stats.ppTimeOnIce)
-                                    * 3600.0;
-        player.customs.ppPt60 = player.customs.ppGoal60 + player.customs.ppAssist60;
-        player.customs.shGoal60 = static_cast<double>(player.stats.shGoals)
-                                  / static_cast<double>(player.stats.shTimeOnIce)
-                                  * 3600.0;
-        player.customs.shAssist60 = static_cast<double>(player.stats.shAssists)
-                                    / static_cast<double>(player.stats.shTimeOnIce)
-                                    * 3600.0;
-        player.customs.shPt60 = player.customs.shGoal60 + player.customs.shAssist60;
-        player.customs.shots60 = static_cast<double>(player.stats.shots)
-                                 / static_cast<double>(player.customs.totalToi) * 3600.0;
-        player.customs.hit60 = static_cast<double>(player.stats.hit)
-                               / static_cast<double>(player.customs.totalToi) * 3600.0;
-        player.customs.takeaway60 = static_cast<double>(player.stats.takeaway)
-                                    / static_cast<double>(player.customs.totalToi)
-                                    * 3600.0;
-        player.customs.takeawayRel60 = static_cast<double>(player.customs.takeawayRel)
-                                       / static_cast<double>(player.customs.totalToi)
-                                       * 3600.0;
-        player.customs.shotblock60 = static_cast<double>(player.stats.shotblock)
-                                     / static_cast<double>(player.customs.totalToi)
-                                     * 3600.0;
+    float normalizedInv(float stat, float ppPct, float shPct)
+    {
+        return stat * (1 + ppPct - shPct);
     }
 }
 
-int PlayerUtils::playerIndex(const std::string& id, const std::vector<Player>& players)
+void Player::calcStats(Player_t& player)
 {
-    int idFormatted = std::stoi(id);
-    for (size_t i = 0; i < players.size(); ++i) {
-        if (players[i].info.playerId == idFormatted) {
-            return static_cast<int>(i);
-        }
+    if (player.stat.toi <= 0) {
+        return;
     }
 
-    return -1;
+    player.calc.evGoal = player.stat.goal - player.stat.ppg - player.stat.shg;
+    player.calc.evAssist = player.stat.assist - player.stat.ppa - player.stat.sha;
+
+    player.calc.pt = player.stat.goal + player.stat.assist;
+    player.calc.evPt = player.calc.evGoal + player.calc.evAssist;
+    player.calc.ppPt = player.stat.ppg + player.stat.ppa;
+    player.calc.shPt = player.stat.shg + player.stat.sha;
+
+    if (player.stat.shot > 0) {
+        player.calc.shotPer = static_cast<float>(player.stat.goal)
+                              / static_cast<float>(player.stat.shot) * 100.0f;
+    }
+    player.calc.tkDiff
+      = static_cast<i16>(player.stat.tka) - static_cast<i16>(player.stat.gva);
+
+    player.calc.totalToi = player.stat.toi + player.stat.pptoi + player.stat.shtoi;
+    player.calc.aevtoi = atoi(player.stat.toi, player.stat.gp);
+    player.calc.apptoi = atoi(player.stat.pptoi, player.stat.gp);
+    player.calc.ashtoi = atoi(player.stat.shtoi, player.stat.gp);
+    player.calc.atoi = player.calc.aevtoi + player.calc.apptoi + player.calc.ashtoi;
+
+    player.calc.ppPct = player.calc.apptoi / (player.calc.atoi);
+    player.calc.shPct = player.calc.ashtoi / (player.calc.atoi);
+
+    player.calc.goal60 = per60(player.stat.goal, player.calc.totalToi);
+    player.calc.assist60 = per60(player.stat.assist, player.calc.totalToi);
+    player.calc.pt60 = player.calc.goal60 + player.calc.assist60;
+
+    player.calc.evGoal60 = per60(player.calc.evGoal, player.stat.toi);
+    player.calc.evAssist60 = per60(player.calc.evAssist, player.stat.toi);
+    player.calc.evPt60 = player.calc.evGoal60 + player.calc.evAssist60;
+
+    player.calc.minor60
+      = per60((u16)(player.stat.pim - 5 * player.stat.fight), player.calc.totalToi);
+    player.calc.shot60 = per60(player.stat.shot, player.calc.totalToi);
+    player.calc.hit60 = per60(player.stat.hit, player.calc.totalToi);
+    player.calc.sb60 = per60(player.stat.sb, player.calc.totalToi);
+    player.calc.tka60 = per60(player.stat.tka, player.calc.totalToi);
+    player.calc.gva60 = per60(player.stat.gva, player.calc.totalToi);
+    player.calc.cf60 = per60(player.stat.cf, player.calc.totalToi);
+    player.calc.ca60 = per60(player.stat.ca, player.calc.totalToi);
+
+    player.calc.tkaDiff60 = per60(player.calc.tkDiff, player.calc.totalToi);
+    player.calc.sfDiff60
+      = per60(player.stat.sf60 - player.stat.sa60, player.calc.totalToi);
+    player.calc.cfDiff60
+      = per60(player.calc.cf60 - player.calc.ca60, player.calc.totalToi);
+    player.calc.gfDiff60
+      = per60(player.stat.gf60 - player.stat.ga60, player.calc.totalToi);
+
+    player.calc.nShot60
+      = normalized(player.calc.shot60, player.calc.ppPct, player.calc.shPct);
+    player.calc.nSf60
+      = normalized(player.stat.sf60, player.calc.ppPct, player.calc.shPct);
+    player.calc.nSa60
+      = normalizedInv(player.stat.sa60, player.calc.ppPct, player.calc.shPct);
+    player.calc.nGf60
+      = normalized(player.stat.gf60, player.calc.ppPct, player.calc.shPct);
+    player.calc.nGa60
+      = normalizedInv(player.stat.ga60, player.calc.ppPct, player.calc.shPct);
+
+    float gf = player.stat.gf60 / 3600 * static_cast<float>(player.stat.toi);
+    if (gf <= 0.0f) {
+        return;
+    }
+    player.calc.ipp
+      = static_cast<float>(player.calc.pt) / static_cast<float>(player.calc.pt + gf);
 }
 
-void PlayerUtils::printDef(const Player& player)
+void Player::indexes(Player_t* player)
 {
-    std::string fullName = player.info.firstName + " " + player.info.lastName;
-
-    std::cout << std::left << std::setw(20) << fullName << std::right << std::setw(9)
-              << player.stats.gamesPlayed << std::setw(9) << player.stats.goals
-              << std::setw(9) << player.stats.assists << std::setw(9)
-              << player.customs.points << std::setw(9) << player.stats.plusminus
-              << std::setw(9) << std::fixed << std::setprecision(2)
-              << player.customs.evAtoi << std::setw(9) << player.customs.atoi
-              << std::setw(9) << player.customs.goal60 << std::setw(9)
-              << player.customs.evAssist60 << std::setw(9) << player.customs.assist60
-              << std::setw(9) << player.customs.evPt60 << std::setw(9)
-              << player.customs.shots60 << std::setw(9) << player.customs.shotPercentage
-              << std::setw(9) << player.customs.hit60 << std::setw(9)
-              << player.customs.takeaway60 << std::setw(9) << player.customs.takeawayRel60
-              << std::setw(9) << player.customs.shotblock60 << '\n';
+    const Percentiles_t& pct = player->percentile;
+    player->index.defense
+      = pct.nSa60 + pct.nGa60 + pct.sb60 + pct.tkaDiff60 + pct.minor60;
+    player->index.attack = pct.nSf60 + pct.nGf60 + pct.pt60 + pct.nShot60 + pct.ipp;
 }
