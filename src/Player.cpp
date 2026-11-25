@@ -89,6 +89,8 @@ void Player::calcStats(Player_t& player)
     player.calc.gfDiff60
       = per60(player.stat.gf60 - player.stat.ga60, player.calc.totalToi);
 
+    player.calc.nSb60
+      = normalizedInv(player.calc.sb60, player.calc.ppPct, player.calc.shPct);
     player.calc.nShot60
       = normalized(player.calc.shot60, player.calc.ppPct, player.calc.shPct);
     player.calc.nSf60
@@ -112,6 +114,6 @@ void Player::indexes(Player_t* player)
 {
     const Percentiles_t& pct = player->percentile;
     player->index.defense
-      = pct.nSa60 + pct.nGa60 + pct.sb60 + pct.tkaDiff60 + pct.minor60;
+      = pct.nSa60 + pct.nGa60 + pct.nSb60 + pct.tkaDiff60 + pct.minor60;
     player->index.attack = pct.nSf60 + pct.nGf60 + pct.pt60 + pct.nShot60 + pct.ipp;
 }

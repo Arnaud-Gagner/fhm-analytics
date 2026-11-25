@@ -99,6 +99,7 @@ struct CalcStats_t {
     float gfDiff60 = 0.0f;
     float minor60 = 0.0f;
     float nShot60 = 0.0f;
+    float nSb60 = 0.0f;
     float nSf60 = 0.0f;
     float nSa60 = 0.0f;
     float nGf60 = 0.0f;
@@ -161,6 +162,7 @@ struct Percentiles_t {
     float cfDiff60 = 0.0f;
     float gfDiff60 = 0.0f;
     float nShot60 = 0.0f;
+    float nSb60 = 0.0f;
     float nSf60 = 0.0f;
     float nSa60 = 0.0f;
     float nGf60 = 0.0f;

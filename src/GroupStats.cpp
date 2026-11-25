@@ -71,6 +71,7 @@ namespace
         STAT_PERCENTILE(calc.cfDiff60, cfDiff60, false),
         STAT_PERCENTILE(calc.gfDiff60, gfDiff60, false),
         STAT_PERCENTILE(calc.nShot60, nShot60, false),
+        STAT_PERCENTILE(calc.nSb60, nSb60, false),
         STAT_PERCENTILE(calc.nSf60, nSf60, false),
         STAT_PERCENTILE(calc.nSa60, nSa60, true),
         STAT_PERCENTILE(calc.nGf60, nGf60, false),
