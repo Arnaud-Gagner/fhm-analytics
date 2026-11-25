@@ -17,10 +17,12 @@ cmake --build build --config Release
 
 ## TODO
 
-1. Custom filter system
-2. Sorting by categories
-3. Handle goalies
-4. Optimize parsing (for fun)
+1. Load team stats & goalies
+2. Redesign stats loading
+3. Sort table for a stat
+4. Handle goalies in GUI
+5. Search filters in GUI
+5. Overkilled custom configs for search filters
 
 ## Contributions
 
