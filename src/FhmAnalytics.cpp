@@ -17,6 +17,8 @@ namespace
     std::vector<Player_t> FilteredPlayers = {};
     std::mutex FilteredMutex;
 
+    std::function<void(std::vector<Player_t>&)> RefreshPlayers = {};
+
     void reloadTeams(bool isFreeAgents)
     {
         char* masterBuffer = nullptr;
@@ -92,11 +94,10 @@ void FhmAnalytics::loadTeams(bool isFA)
     reloadTeams(isFA);
     applyFilter();
 }
-#include <iostream>
+
 void FhmAnalytics::applyFilter()
 {
     std::unique_lock<std::mutex> lock(FilteredMutex);
-    const Filter_t filter = FilterConfig::activeFilter();
 
     GroupStats_t attack{};
     GroupStats_t defense{};
@@ -131,29 +132,19 @@ void FhmAnalytics::applyFilter()
             FilteredPlayers.push_back(*player);
         }
     }
-    // for (Player_t* player : defense.players) {
-    //     if (player->index.defensePct > 90.0) {
-    //         FilteredPlayers.push_back(*player);
-    //     }
-    // }
-
-    // for (Player_t* player : attack.players) {
-    //     Player::indexes(player);
-    //     if (player->index.defense > 0.6) {
-    //         FilteredPlayers.push_back(*player);
-    //     }
-    // }
-    // for (Player_t* player : defense.players) {
-    //     Player::indexes(player);
-    //     if (player->index.defense > 0.6) {
-    //         FilteredPlayers.push_back(*player);
-    //     }
-    // }
-    // TODO: callback to GUI
+    if (RefreshPlayers) {
+        RefreshPlayers(FilteredPlayers);
+    }
 }
 
 const std::vector<Player_t>& FhmAnalytics::filteredPlayers()
 {
     std::unique_lock<std::mutex> lock(FilteredMutex);
     return FilteredPlayers;
+}
+
+void FhmAnalytics::setCallBack(
+  const std::function<void(const std::vector<Player_t>&)>& callback)
+{
+    RefreshPlayers = std::move(callback);
 }

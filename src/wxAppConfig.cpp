@@ -22,8 +22,9 @@ wxAppConfig::wxAppConfig(wxWindow* parent)
 
     SetSizerAndFit(mainSizer);
 
-    AppConfig::setCallback([this](const AppConfig_t& config) { setConfig(config); });
-    AppConfig::validate(AppConfig::settings());
+    AppConfig::setCallback([this](const AppConfig_t& config) {
+        CallAfter([this, config]() { setConfig(config); });
+    });
 
     mApply->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { apply(); });
 }

@@ -56,6 +56,10 @@ void AppConfig::load()
         TERMINATE("Path configuration is not in string format. Please fix that.")
     }
     Config.positionThreshold = positionThreshToml->as<int>();
+
+    if (UpdateAppConfig) {
+        UpdateAppConfig(Config);
+    }
 }
 
 void AppConfig::save()

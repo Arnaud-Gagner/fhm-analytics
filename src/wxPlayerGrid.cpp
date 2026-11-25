@@ -3,6 +3,8 @@
 #include <wx/grid.h>
 #include <wx/sizer.h>
 
+#include "FhmAnalytics.h"
+
 namespace
 {
     wxString formatToi(u16 totalSeconds)
@@ -50,6 +52,10 @@ wxPlayerGrid::wxPlayerGrid(wxWindow* parent)
     mainSizer->Add(mTable, 1, wxEXPAND);
 
     SetSizerAndFit(mainSizer);
+
+    FhmAnalytics::setCallBack([this](const std::vector<Player_t>& players) {
+        CallAfter([this, players]() { setPlayers(players); });
+    });
     // TODO:
     // wxEVT_GRID_LABEL_LEFT_CLICK
 }

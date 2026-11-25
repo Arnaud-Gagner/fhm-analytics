@@ -1,3 +1,4 @@
+#include <thread>
 #include <wx/app.h>
 
 #include "FhmAnalytics.h"
@@ -20,11 +21,10 @@ int main(int argc, char** argv)
 
 bool wxFhmAnalytics::OnInit()
 {
-    FhmAnalytics::init();
+    std::thread([]() { FhmAnalytics::init(); }).detach();
     SetAppearance(wxAppBase::Appearance::System);
-
     wxMainWindow* mainWindow = new wxMainWindow();
     mainWindow->Show();
-    mainWindow->setPlayers(FhmAnalytics::filteredPlayers());
+
     return true;
 }
