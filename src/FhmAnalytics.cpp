@@ -99,8 +99,8 @@ void FhmAnalytics::applyFilter()
 {
     std::unique_lock<std::mutex> lock(FilteredMutex);
 
-    GroupStats_t attack{};
-    GroupStats_t defense{};
+    PlayerGroup_t attack{};
+    PlayerGroup_t defense{};
     for (auto& [id, player] : UnfilteredPlayers) {
         if (player.info.leagueId == 0 && player.stat.gp >= 15
             && (player.position.c == 20 || player.position.lw == 20
