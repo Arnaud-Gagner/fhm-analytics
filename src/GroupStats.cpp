@@ -7,7 +7,7 @@ namespace
 {
     struct PlayerPercentile_t {
         float (*player)(const Player_t&);
-        float Percentiles_t::* statPercentile;
+        float Percentiles_t::* playerPercentile;
         bool lowerIsBetter;
     };
 
@@ -16,7 +16,7 @@ namespace
       &Percentiles_t::field,                                                             \
       inv }
 
-    const PlayerPercentile_t StatPercentiles[] = {
+    const PlayerPercentile_t PlayerPercentiles[] = {
         PLAYER_PERCENTILE(stat.goal, goal, false),
         PLAYER_PERCENTILE(stat.assist, assist, false),
         PLAYER_PERCENTILE(stat.plusMinus, plusMinus, false),
@@ -116,9 +116,9 @@ void GroupStats::loadPercentiles(PlayerGroup_t& playerGroup)
     std::vector<float> values(playerNumber);
     std::vector<float> sorted(playerNumber);
 
-    for (const PlayerPercentile_t& statPercentile : StatPercentiles) {
+    for (const PlayerPercentile_t& playerPercentile : PlayerPercentiles) {
         for (size_t i = 0; i < playerNumber; ++i) {
-            values[i] = statPercentile.player(*playerGroup.players[i]);
+            values[i] = playerPercentile.player(*playerGroup.players[i]);
         }
         sorted = values;
         std::sort(sorted.begin(), sorted.end());
@@ -131,16 +131,20 @@ void GroupStats::loadPercentiles(PlayerGroup_t& playerGroup)
             float percentile
               = (below + 0.5f * equal) / static_cast<float>(playerNumber) * 100.0f;
 
-            if (statPercentile.lowerIsBetter) {
+            if (playerPercentile.lowerIsBetter) {
                 percentile = 100.0f - percentile;
             }
-            (playerGroup.players[i]->percentile).*(statPercentile.statPercentile)
+            (playerGroup.players[i]->percentile).*(playerPercentile.playerPercentile)
               = percentile;
         }
     }
 }
 
-void GroupStats::loadPercentiles(GoalieGroup_t& goalieGroup) {}
+void GroupStats::loadPercentiles(GoalieGroup_t& goalieGroup)
+{
+    // TODO
+    // gsaa = (shot_against * (1 - league_sv%) - goals_allowed)
+}
 
 void GroupStats::loadIndexPercentiles(PlayerGroup_t& playerGroup)
 {

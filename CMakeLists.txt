@@ -15,8 +15,10 @@ set (SOURCES
     src/FhmAnalytics.cpp
     src/FilterConfig.cpp
     src/GroupStats.cpp
+    src/League.cpp
     src/main.cpp
     src/Player.cpp
+    src/Team.cpp
     src/wxAppConfig.cpp
     src/wxMainWindow.cpp
     src/wxPlayerGrid.cpp

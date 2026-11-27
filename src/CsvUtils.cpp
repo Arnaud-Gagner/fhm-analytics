@@ -28,6 +28,40 @@ namespace
         return true;
     }
 
+    bool teamStatLine(char* buffer, char* fields[26])
+    {
+        fields[0] = buffer;
+        size_t fieldIndex = 0;
+
+        for (size_t i = 0; i < 512; ++i) {
+            if (buffer[i] == '\n' || buffer[i] == '\0') {
+                buffer[i] == '\0';
+                return fieldIndex == 57;
+            }
+            if (buffer[i] == ';' && fieldIndex <= 24) {
+                buffer[i] = '\0';
+                fieldIndex++;
+                fields[fieldIndex] = &buffer[i + 1];
+            }
+            else if (buffer[i] == ';' && fieldIndex > 25) {
+                buffer[i] = '\0';
+                return false;
+            }
+        }
+        return true;
+    }
+
+    void deserializeTeamStat(Team_t& team, char* fields[26])
+    {
+        // TODO
+        team.id = static_cast<i32>(atoi(fields[0]));
+        team.stats.gp = atoi(fields[1]);
+        team.stats.gf = atoi(fields[2]);
+        team.stats.ga = atoi(fields[3]);
+        team.stats.sf = atoi(fields[4]);
+        team.stats.sa = atoi(fields[5]);
+    }
+
     bool infoLine(char* buffer, char* fields[15])
     {
         fields[0] = buffer;
@@ -210,6 +244,13 @@ void CsvUtils::interpretTeam(std::unordered_map<i32, i16>& teams,
         bufferIndex = ptrPosition - buffer;
         isFileFinished = bufferIndex + 1 >= size;
     }
+}
+
+void CsvUtils::interpretTeamStats(std::unordered_map<i32, i16>& teams,
+                                  const char* buffer,
+                                  size_t size)
+{
+    // TODO
 }
 
 void CsvUtils::interpretMaster(const std::unordered_map<i32, i16>& teams,

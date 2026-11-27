@@ -1,10 +1,11 @@
 #ifndef CSV_UTILS_H
 #define CSV_UTILS_H
 
-#include <string>
 #include <unordered_map>
 
+#include "Goaltender.h"
 #include "Player.h"
+#include "Team.h"
 
 namespace CsvUtils
 {
@@ -13,6 +14,9 @@ namespace CsvUtils
     void interpretTeam(std::unordered_map<i32, i16>& teams,
                        const char* buffer,
                        size_t size);
+    void interpretTeamStats(std::unordered_map<i32, i16>& teams,
+                            const char* buffer,
+                            size_t size);
 
     void interpretMaster(const std::unordered_map<i32, i16>& teams,
                          std::unordered_map<u32, Player_t>& players,

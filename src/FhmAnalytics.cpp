@@ -102,13 +102,13 @@ void FhmAnalytics::applyFilter()
     PlayerGroup_t attack{};
     PlayerGroup_t defense{};
     for (auto& [id, player] : UnfilteredPlayers) {
-        if (player.info.leagueId == 0 && player.stat.gp >= 15
+        if (player.info.leagueId == 0 && player.stat.gp >= 10
             && (player.position.c == 20 || player.position.lw == 20
                 || player.position.rw == 20)) {
             Player::calcStats(player);
             attack.players.push_back(&player);
         }
-        if (player.info.leagueId == 0 && player.stat.gp >= 15
+        if (player.info.leagueId == 0 && player.stat.gp >= 10
             && (player.position.ld == 20 || player.position.rd == 20)) {
             Player::calcStats(player);
             defense.players.push_back(&player);
@@ -128,7 +128,12 @@ void FhmAnalytics::applyFilter()
     GroupStats::loadIndexPercentiles(defense);
 
     for (Player_t* player : attack.players) {
-        if (player->percentile.nShot60 >= 90.0) {
+        if (player->info.teamId == 25) {
+            FilteredPlayers.push_back(*player);
+        }
+    }
+    for (Player_t* player : defense.players) {
+        if (player->info.teamId == 25) {
             FilteredPlayers.push_back(*player);
         }
     }
